@@ -17,7 +17,7 @@ When a person is available: weekly hours, date overrides, time off.
 | AVL-5 | Schedule used for a host on an event: event's schedule, else the host's per-event schedule ([RR-2](team-events.md)), else the host's default. | event without schedule → host default used |
 | AVL-6 | Rules expand per local date in the schedule's zone; overlapping or touching ranges on a date merge; `end` 23:59 means midnight. | 09–12 and 12–17 → one range 09–17 |
 | AVL-7 | Any override on a date replaces all weekly rules for that date; several overrides on a date give several ranges; an override with `start == end` makes the date unavailable. | Mon rule 09–17, override Mon 13–14 → only 13–14 |
-| AVL-8 | On DST change days, ranges keep their wall-clock times; their UTC instants shift. | Europe/Berlin, last Sun of March, 09–17 → 07:00–15:00 UTC |
+| AVL-8 | On DST change days, ranges keep their wall-clock times; their UTC instants shift. A time skipped by the change uses the offset before it (02:30 → 03:30); a repeated one the earlier instant. | Europe/Berlin, last Sun of March, 09–17 → 07:00–15:00 UTC |
 | AVL-9 | Travel periods `{time_zone, start_date, end_date?}` read the default schedule's rules in the travel zone for those dates. | default schedule 09–17 Europe/Berlin, travel to Asia/Tokyo → 09–17 Tokyo time |
 | AVL-10 | Time off `{start, end, reason, note?, note_public (default false), redirect_to_user?}` makes those dates unavailable for booking. | time off Tue → Tue has no bookable slots |
 | AVL-11 | During time off with `redirect_to_user`, the public page shows the dates as away with a link to that user's page; `note` shown only if `note_public`. | manual: away dates show redirect |

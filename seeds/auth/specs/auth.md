@@ -26,6 +26,7 @@ Accounts, sign-in, second factor, recovery, sessions and API keys for a multi-us
 | AUTH-14 | API keys: `prefix_` + ≥ 128 random bits; only a SHA-256 hash stored; shown once; `{note, expires_at? (default 90 days), last_used_at, scope: user\|team}`; sent as `Authorization: Bearer`; expired by timestamp. Rotate = new key, old one revoked. | expired key → 401 |
 | AUTH-15 | Rate limits (fixed window, fail closed): sign-up, sign-in, reset, verify: 10/min per IP and per email; 2FA endpoints 5/min per user. Over → 429 with `Retry-After`. | 11th sign-in in a minute → 429 |
 | AUTH-16 | Delete account: password (or OIDC re-auth) + 2FA code if on; removes personal data; owned resources follow `@spechub/teams:TEAM-9`. | delete → can't sign in, email reusable |
+| AUTH-17 | State changes from cookie sessions need a non-GET request from the same origin: SameSite=Lax cookie plus an `Origin` check; cross-origin → 403. | POST with foreign `Origin` → 403 |
 
 ## Out of scope
 

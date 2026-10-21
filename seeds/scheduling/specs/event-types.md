@@ -21,7 +21,7 @@ All durations are whole minutes.
 | EVT-8 | `limits.bookings {day?, week?, month?, year?}` and `limits.minutes {…}` (total booked minutes); each set value must be ≤ every set value of a longer period. | save day 5, week 3 → rejected |
 | EVT-9 | `seats?` (≥ 1): several bookers share one slot ([BKG-16](bookings.md)). Null = one booking per slot. | manual: see BKG-16 |
 | EVT-10 | `requires_confirmation` (default false), with optional `confirm_within {value, unit: minutes\|hours}`: confirmation needed only when the booking starts within that time of now; otherwise auto-accepted. | threshold 24 h; book 3 days ahead → accepted; book in 2 h → pending |
-| EVT-11 | `pending_blocks_slot` (default false): pending bookings of this type block the host's time. | pending 10:00, flag on → 10:00 not offered |
+| EVT-11 | `pending_blocks_slot` (default false): pending bookings of this type block their host's time, for every event type. | pending 10:00, flag on → 10:00 not offered |
 | EVT-12 | `max_active_per_booker?`: a booker (by email) with that many future accepted bookings of this type is refused, and shown their next booking to reschedule. | max 1; same email books twice → second refused |
 | EVT-13 | `hidden` events are left out of the public profile but stay bookable by direct link. | hidden event → not listed; direct URL → slots shown |
 | EVT-14 | `locations`: ordered list of `{kind: in_person\|link\|phone_host\|phone_booker\|video, value?}`; the booker picks one when there are several ([BKG-5](bookings.md)). | two locations → booker must choose |

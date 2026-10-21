@@ -13,7 +13,7 @@ Which start times a booker is offered. The same rules re-check every booking ([B
 | SLT-1 | Query: `event`, `from`, `to` (ISO 8601 instants, to > from, ≤ 62 days apart; slots starting in `[from, to)`), booker `time_zone`, `duration?`, `reschedule_uid?`. Result: map booker-local `YYYY-MM-DD` → list of `{start (ISO 8601 UTC), seats_taken?}`. | to < from → rejected |
 | SLT-2 | Per host: free = schedule ranges ([AVL](schedules.md)) − time off − busy times (SLT-8..11). | busy 10–11 in 09–17 → 10:00 not offered |
 | SLT-3 | Hosts combine per [RR-3](team-events.md); individual events have one host. | manual: see RR-3 |
-| SLT-4 | Slots start at `max(range start, now + min_notice)`, rounded up to the alignment step: the first of 60, 30, 20, 15, 10, 5 that divides the interval, else 1; alignment is to the hour in the booker's zone. | free 09:05–12:00, 60 min → 10:00, 11:00 |
+| SLT-4 | Slots start at `max(range start, now + min_notice)` per free range (schedule ranges minus busy time widened per SLT-9), rounded up to the alignment step: the first of 60, 30, 20, 15, 10, 5 that divides the interval, else 1; alignment is to the hour in the booker's zone. | free 09:05–12:00, 60 min → 10:00, 11:00 |
 | SLT-5 | A slot is offered only if `start + duration ≤ range end`; next start = start + interval. | free 09:00–10:00, 45 min, interval 30 → 09:00 only |
 | SLT-6 | Interval < duration gives overlapping slots. | 60 min, interval 30, free 09–11 → 09:00, 09:30, 10:00 |
 | SLT-7 | A start offered by two ranges appears once. | manual: two hosts, same start → one slot |

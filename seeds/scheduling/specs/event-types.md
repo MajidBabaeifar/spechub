@@ -26,7 +26,7 @@ All durations are whole minutes.
 | EVT-13 | `hidden` events are left out of the public profile but stay bookable by direct link. | hidden event → not listed; direct URL → slots shown |
 | EVT-14 | `locations`: ordered list of `{kind: in_person\|link\|phone_host\|phone_booker\|video, value?}`; the booker picks one when there are several ([BKG-5](bookings.md)). | two locations → booker must choose |
 | EVT-15 | `booking_fields`: the booking form ([BKG-3](bookings.md)). | manual: see BKG-3 |
-| EVT-16 | `allow_cancel`, `allow_reschedule` (default true); `min_reschedule_notice?`; `cancel_reason`: `required_host` (default), `required_booker`, `required_both`, `optional`. | allow_cancel false → booker cancel link refused |
+| EVT-16 | `allow_cancel`, `allow_reschedule` (default true; restrict the booker, never the organizer); `min_reschedule_notice?`; `cancel_reason`: `required_host` (default), `required_booker`, `required_both`, `optional`. | allow_cancel false → booker cancel link refused |
 | EVT-17 | `private_links`: secret URLs `{token, expires_at?, max_uses (default 1), uses}` that open a hidden event; a link past expiry or `max_uses` is refused. | link max 1; second booking via it → refused |
 | EVT-18 | `success_redirect_url?`: after booking, the booker is sent there with booking details as query parameters. | manual: book → redirected with `uid` |
 | EVT-19 | `schedule?`: the schedule used for availability ([AVL-5](schedules.md)). | manual: see AVL-5 |

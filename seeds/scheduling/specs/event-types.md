@@ -18,7 +18,7 @@ All durations are whole minutes.
 | EVT-5 | `min_notice` (≥ 0, default 120): no slot starts before now + `min_notice`. | now 10:00, notice 120 → first slot ≥ 12:00 |
 | EVT-6 | `buffer_before`, `buffer_after` (≥ 0, default 0): protected time around each booking of this type ([SLT-9](slots.md)). | manual: see SLT-9 |
 | EVT-7 | `window`: `unlimited` (default); `rolling {days, calendar_days: bool}`; `rolling_available {days}` (counts only days with ≥ 1 free slot, scan ≤ 61 days); `range {start_date, end_date}` inclusive in the owner's zone. | rolling 5 business days from Fri → last bookable day is next Fri |
-| EVT-8 | `limits.bookings {day?, week?, month?, year?}` and `limits.minutes {…}` (total booked minutes); each set value must be ≤ the next larger period's value. | save day 5, week 3 → rejected |
+| EVT-8 | `limits.bookings {day?, week?, month?, year?}` and `limits.minutes {…}` (total booked minutes); each set value must be ≤ every set value of a longer period. | save day 5, week 3 → rejected |
 | EVT-9 | `seats?` (≥ 1): several bookers share one slot ([BKG-16](bookings.md)). Null = one booking per slot. | manual: see BKG-16 |
 | EVT-10 | `requires_confirmation` (default false), with optional `confirm_within {value, unit: minutes\|hours}`: confirmation needed only when the booking starts within that time of now; otherwise auto-accepted. | threshold 24 h; book 3 days ahead → accepted; book in 2 h → pending |
 | EVT-11 | `pending_blocks_slot` (default false): pending bookings of this type block the host's time. | pending 10:00, flag on → 10:00 not offered |

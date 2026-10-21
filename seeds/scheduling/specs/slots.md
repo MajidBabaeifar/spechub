@@ -17,7 +17,7 @@ Which start times a booker is offered. The same rules re-check every booking ([B
 | SLT-5 | A slot is offered only if `start + duration ≤ range end`; next start = start + interval. | free 09:00–10:00, 45 min, interval 30 → 09:00 only |
 | SLT-6 | Interval < duration gives overlapping slots. | 60 min, interval 30, free 09–11 → 09:00, 09:30, 10:00 |
 | SLT-7 | A start offered by two ranges appears once. | manual: two hosts, same start → one slot |
-| SLT-8 | Accepted bookings where the host is organiser or attendee are busy; `awaiting_payment` bookings are busy until their payment timeout ([PAY-3](payments.md)); pending bookings are busy only per [EVT-11](event-types.md), for their host; cancelled and rejected never. | cancelled 10:00 → 10:00 offered |
+| SLT-8 | Accepted bookings where the host is organiser or attendee (by account email) are busy; `awaiting_payment` bookings are busy until their payment timeout ([PAY-3](payments.md)); pending bookings are busy only per [EVT-11](event-types.md), for their host; cancelled and rejected never. | cancelled 10:00 → 10:00 offered |
 | SLT-9 | Buffers: new event E (before B, after A) conflicts with booking X (before Bx, after Ax) iff `[E.start − B, E.end + A]` overlaps `[X.start − Bx, X.end + Ax]`. Buffers never shrink working hours. | X 10:00–10:30 with A=0, E B=15 → 10:30 blocked, 10:45 ok |
 | SLT-10 | Busy time from connected calendars ([CAL-3](calendars.md)) is busy like a booking with no buffers of its own. | external 14–15 → 14:00 not offered |
 | SLT-11 | If a host's connected calendar can't be read, that host has no availability for the query (fail closed). | calendar API error → host offers nothing |

@@ -12,7 +12,7 @@ Accounts, sign-in, second factor, recovery, sessions and API keys for a multi-us
 |---|---|---|
 | AUTH-1 | User: `id`, `email` (unique, lower-cased), `email_verified_at?`, `username` (unique, `[a-z0-9-]`, 3–40, no `+`), `name`, `locale`, `locked` (default false), `role`: `user`\|`admin` (instance admin), `avatar_url?`, `bio?`. | signup `Ann@X.com` → stored `ann@x.com` |
 | AUTH-2 | Sign up with `email`, `password`, `username`, `name` (1–100 chars) and any field another spec requires at sign-up; `locale` defaults to `en`. Sign-up can be turned off instance-wide except for invite links (`@spechub/teams:TEAM-5`). Taken email or username → `taken`. | signup disabled, no invite → refused |
-| AUTH-3 | Passwords: ≥ 10 chars, ≤ 128, not in a breached/common list; no composition rules. Admins: ≥ 15 chars and 2FA required before admin actions. | `Password1` → refused (common) |
+| AUTH-3 | Passwords: ≥ 10 chars, ≤ 128, not in the instance's breached/common list, not containing the username or email local part; no composition rules. Admins: ≥ 15 chars and 2FA required before admin actions. | `password1234` → refused (common); `Password1` → refused (short) |
 | AUTH-4 | Passwords stored with a slow adaptive hash (argon2id, or bcrypt cost ≥ 12). | manual: stored hash format |
 | AUTH-5 | Email verification: single-use random token (≥ 128 bits), valid 24 h; verifying sets `email_verified_at`. Unverified users can sign in but can't publish public pages until verified. | expired token → refused |
 | AUTH-6 | Sign in by email + password; unknown email, wrong password and password-less accounts all give the same `invalid_credentials`. Locked users → `locked`. | unknown email vs wrong password → same error |

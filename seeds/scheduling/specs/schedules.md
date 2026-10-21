@@ -12,7 +12,7 @@ When a person is available: weekly hours, date overrides, time off.
 |---|---|---|
 | AVL-1 | Every user has an IANA `time_zone` (required, chosen at signup) and `week_start` (`monday`\|`sunday`, default `monday`). | signup without zone → rejected |
 | AVL-2 | A schedule has `name`, `time_zone?` (falls back to owner's), weekly rules `{days: [0..6] (0 = Sunday), start, end}` and date overrides `{date, start, end}`; times are wall-clock `HH:MM`; weekly rules need `end > start`, overrides `end ≥ start` ([AVL-7](schedules.md)). | create weekly rule with end ≤ start → rejected |
-| AVL-3 | A new user gets one schedule, Mon–Fri 09:00–17:00, as their default. The first schedule a user creates is their default; a user always has exactly one. | new user → one default schedule |
+| AVL-3 | A new user gets one schedule, Mon–Fri 09:00–17:00, as their default. The owner can make any of their schedules the default; a user always has exactly one. | new user → one default schedule |
 | AVL-4 | Deleting the default schedule makes another one default and repoints every reference to it; deleting the last schedule is refused. | delete only schedule → refused |
 | AVL-5 | Schedule used for a host on an event: event's schedule, else the host's per-event schedule ([RR-2](team-events.md)), else the host's default. | event without schedule → host default used |
 | AVL-6 | Rules expand per local date in the schedule's zone; overlapping or touching ranges on a date merge; `end` 23:59 means midnight. | 09–12 and 12–17 → one range 09–17 |

@@ -10,7 +10,7 @@ Create, confirm, reschedule and cancel a booking, and keep calendars and people 
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| BKG-1 | A booking has `uid` (opaque, unique, URL-safe), `event_type`, `organizer` (a user), `attendees [{name, email, time_zone, phone?, locale, no_show}]`, `start`, `end` (UTC), `location`, `responses`, `status`, `paid`, `from_reschedule?` (uid), `rescheduled` (bool), `cancel_reason?`, `cancelled_by?`, `reject_reason?`, `sequence` (starts 0), `ical_uid` (kept across reschedules, [CAL-11](calendars.md)). | create → uid of ≥ 16 URL-safe chars |
+| BKG-1 | A booking has `uid` (opaque, unique, URL-safe), `event_type`, `organizer` (a user), `attendees [{name, email, time_zone, phone?, locale, no_show}]`, `start`, `end` (UTC), `location`, `responses`, `status`, `paid`, `from_reschedule?` (uid), `rescheduled` (bool), `cancel_reason?`, `cancelled_by?`, `reject_reason?`, `host_no_show`, `sequence` (starts 0), `ical_uid` (kept across reschedules, [CAL-11](calendars.md)). | create → uid of ≥ 16 URL-safe chars |
 | BKG-2 | Statuses: `awaiting_payment`, `pending`, `accepted`, `rejected`, `cancelled`. Only these transitions: awaiting_payment → pending\|accepted\|cancelled; pending → accepted\|rejected\|cancelled; accepted → cancelled. | accepted → rejected → refused |
 | BKG-3 | Booking form: system fields `name` (required), `email` (required), `phone` (hidden), `location`, `notes` (optional), `guests` (list of emails, hideable), `reschedule_reason` (reschedule only); owner-added fields of type text, textarea, number, email, phone, address, url, select, multiselect, checkbox, radio, boolean, each with `label`, `required`, `hidden`, `options?`, `min_length?`, `max_length?`. System fields can be hidden but not deleted. | required custom field empty → rejected |
 | BKG-4 | Field validation: emails valid; phones E.164-valid; email fields may have `allow_domains`/`block_domains`; guests de-duplicated and lower-cased; guests who are hosts of the event are dropped. | guest list with a duplicate → stored once |
@@ -27,7 +27,7 @@ Create, confirm, reschedule and cancel a booking, and keep calendars and people 
 | BKG-15 | Cancel by booker (via `uid` link, no login) or organizer, until the booking ends; refused when `allow_cancel` is false; reason required per [EVT-16](event-types.md). Deletes external calendar and video events. | cancel after end → refused |
 | BKG-16 | Seats ([EVT-9](event-types.md)): one booking per slot holds up to `seats` attendees, each with a seat `uid` to cancel or reschedule their own seat; a full slot → `seats_full`; the same email twice → `already_booked`. Removing the last seat cancels the booking. | seats 2; third booker → seats_full |
 | BKG-17 | Seated bookings show attendees to each other only if `show_attendees` (default false). | manual: attendee email lists only themself |
-| BKG-18 | No-show: after the start, the organizer can mark any attendee or the host as no-show; marking before start → refused. | mark 1 min before start → refused |
+| BKG-18 | No-show: after the start of an accepted booking, the organizer can mark or unmark any attendee or the host as no-show; marking before start → refused. | mark 1 min before start → refused |
 | BKG-19 | Recurring events (`{freq: weekly\|monthly, interval, count ≤ 24}`): one booking per occurrence sharing a `series_id`; every occurrence must be free; cancel one or all future. Seats and recurrence can't be combined. | weekly × 4 with week 3 busy → whole series refused |
 
 ## Out of scope

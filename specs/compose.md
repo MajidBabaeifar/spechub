@@ -18,7 +18,7 @@ Turn a spec plus everything it requires into one flat bundle an agent can build 
 | CMP-6 | `spechub.lock` pins every resolved name to `{version, sha}`; resolve with a lock uses the pinned SHAs. | test_lockfile |
 | CMP-7 | Bundle layout: `spechub-bundle/BUNDLE.md` (order, versions, SHAs, overrides applied, licences, attributions) and one folder per spec in dependency order, root last. | test_bundle_layout |
 | CMP-8 | In the bundle, every ID is rewritten to its global ID; overridden rows show the new text and `(override by <name>)`; removed rows show `Removed (by <name>)`. | test_bundle_rewrite |
-| CMP-9 | Links inside a spec (`[AUTH-3](auth.md)`) are rewritten to bundle paths. | test_bundle_links |
+| CMP-9 | In-repo links (`[AUTH-3](auth.md)`) and global ID references ([FMT-9](format.md)) are rewritten to bundle paths. | test_bundle_links |
 
 ## Out of scope
 

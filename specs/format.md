@@ -18,6 +18,7 @@ What makes a GitHub repo a SpecHub spec, and how it describes itself.
 | FMT-6 | A version is a git tag `vMAJOR.MINOR.PATCH` (semver); the index stores tag + commit SHA. Untagged repos resolve only as `@head`. | test_versions_from_tags |
 | FMT-7 | Global requirement ID = `name:ID`, e.g. `@spechub/auth:AUTH-3`. | test_global_id |
 | FMT-8 | An implementation repo has topic `spechub-impl` and README front matter `implements: name@version`, `stack: [..]`, optional `url` (live deployment). The spec never lists its implementations. | test_detect_impl_repo |
+| FMT-9 | References to another spec are global IDs in backticks (`` `@spechub/teams:TEAM-5` ``) or the bare name; never relative paths across repos. | test_lint_cross_refs |
 
 ## Out of scope
 

@@ -30,6 +30,7 @@ All durations are whole minutes.
 | EVT-17 | `private_links`: secret URLs `{token, expires_at?, max_uses (default 1), uses}` that open a hidden event; a link past expiry or `max_uses` is refused. | link max 1; second booking via it → refused |
 | EVT-18 | `success_redirect_url?`: after booking, the booker is sent there with booking details as query parameters. | manual: book → redirected with `uid` |
 | EVT-19 | `schedule?`: the schedule used for availability ([AVL-5](schedules.md)). | manual: see AVL-5 |
+| EVT-20 | `locked_time_zone?` (IANA): the booking page shows times in this zone and no zone picker ([PUB-2](public-pages.md)). | locked Europe/Berlin → times in Berlin, no picker |
 
 ## Out of scope
 

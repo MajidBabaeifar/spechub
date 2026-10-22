@@ -10,7 +10,7 @@ Event types owned by a team: everyone attends (collective) or one host is picked
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| RR-1 | A team event type has `mode`: `collective` or `round_robin`, and hosts `[{user, fixed (bool), priority 0–4 (default 2), weight ≥ 0 (default 100), group?}]`; hosts must be accepted team members (`@spechub/teams`). `all_members` (bool) makes every member a host. | add non-member as host → refused |
+| RR-1 | A team event type has `mode`: `collective` or `round_robin`, and hosts `[{user, fixed (bool), priority 0–4 (default 2), weight ≥ 0 (default 100), group?}]`; hosts must be accepted team members (`@specfork/teams`). `all_members` (bool) makes every member a host. | add non-member as host → refused |
 | RR-2 | A host may set a per-event schedule overriding their default ([AVL-5](schedules.md)). | manual: see AVL-5 |
 | RR-3 | Availability: collective → intersection of all hosts; round robin → intersection of fixed hosts and, for each group, the union of its non-fixed hosts. Fixed hosts with no common time → no slots. | RR hosts A 9–12, B 12–17 → slots 9–17 |
 | RR-4 | Collective booking: all hosts attend; the first host is organizer; every host free or `hosts_unavailable`. | one collective host busy → no slot |
@@ -21,7 +21,7 @@ Event types owned by a team: everyone attends (collective) or one host is picked
 | RR-9 | Seats on round-robin: later seats join the first seat's host. | manual: second seat same host |
 | RR-10 | Recurring round-robin: the picked host must be free for all occurrences, else the next candidate is tried. | host busy in week 2 → next host |
 | RR-11 | A team admin can reassign a booking to another free host; old host, new host and attendees are notified. | reassign → both hosts emailed |
-| RR-12 | Team permissions (`@spechub/teams:TEAM-10` rows): event types read: member+; create, update, delete: admin+; team bookings read, reassign: admin+; webhooks read: member+, manage: admin+. A host always sees bookings they host. | member edits team event → 403 |
+| RR-12 | Team permissions (`@specfork/teams:TEAM-10` rows): event types read: member+; create, update, delete: admin+; team bookings read, reassign: admin+; webhooks read: member+, manage: admin+. A host always sees bookings they host. | member edits team event → 403 |
 
 ## Out of scope
 

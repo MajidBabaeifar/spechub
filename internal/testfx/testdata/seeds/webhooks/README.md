@@ -1,6 +1,6 @@
 ---
-spechub: 1
-name: "@spechub/webhooks"
+specfork: 1
+name: "@specfork/webhooks"
 summary: Signed, retried, SSRF-safe outbound webhooks for events the requiring spec defines.
 license: CC-BY-4.0
 derived_from:

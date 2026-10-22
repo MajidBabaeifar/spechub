@@ -25,7 +25,7 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Crawl
-        run: go run ./cmd/spechub crawl --names registry/names.json --out _site
+        run: go run ./cmd/specfork crawl --names registry/names.json --out _site
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/configure-pages@v6

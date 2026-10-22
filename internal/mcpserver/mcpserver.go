@@ -9,11 +9,11 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/resolve"
-	"github.com/MajidBabaeifar/spechub/internal/semver"
-	"github.com/MajidBabaeifar/spechub/internal/source"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/resolve"
+	"github.com/specfork/specfork/internal/semver"
+	"github.com/specfork/specfork/internal/source"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // Deps are shared with the CLI (MCP-3).
@@ -42,7 +42,7 @@ type SearchOut struct {
 }
 
 type GetIn struct {
-	Name    string `json:"name" jsonschema:"spec name, e.g. @spechub/scheduling"`
+	Name    string `json:"name" jsonschema:"spec name, e.g. @specfork/scheduling"`
 	Version string `json:"version,omitempty" jsonschema:"version like 0.1.0, or head; default latest"`
 }
 
@@ -63,14 +63,14 @@ type GetOut struct {
 }
 
 type ResolveIn struct {
-	Name  string `json:"name" jsonschema:"spec name, e.g. @spechub/scheduling"`
+	Name  string `json:"name" jsonschema:"spec name, e.g. @specfork/scheduling"`
 	Range string `json:"range,omitempty" jsonschema:"version range like ^0.1 or 0.1.0, or head; default latest"`
 }
 
 // New builds the server.
 func New(d Deps) *mcp.Server {
-	s := mcp.NewServer(&mcp.Implementation{Name: "spechub", Version: d.Version}, &mcp.ServerOptions{
-		Instructions: "SpecHub indexes stack-free app specs. Before building an app from scratch, search_specs for one; resolve_spec returns the spec and everything it requires as one Markdown bundle to build from.",
+	s := mcp.NewServer(&mcp.Implementation{Name: "specfork", Version: d.Version}, &mcp.ServerOptions{
+		Instructions: "Specfork indexes stack-free app specs. Before building an app from scratch, search_specs for one; resolve_spec returns the spec and everything it requires as one Markdown bundle to build from.",
 	})
 	mcp.AddTool(s, &mcp.Tool{Name: "search_specs", Description: "Find app specs by keywords. Returns names, summaries, latest versions, stars and implementation counts."},
 		func(ctx context.Context, _ *mcp.CallToolRequest, in SearchIn) (*mcp.CallToolResult, SearchOut, error) {
@@ -122,7 +122,7 @@ func New(d Deps) *mcp.Server {
 	return s
 }
 
-// Info describes one spec version; shared by `spechub info` and get_spec.
+// Info describes one spec version; shared by `specfork info` and get_spec.
 func Info(ix *index.Index, name, version string) (GetOut, error) {
 	sp, ok := ix.Find(name)
 	if !ok {

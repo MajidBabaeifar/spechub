@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/source"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/source"
 )
 
 type fx struct {
@@ -21,7 +21,7 @@ func (f *fx) repo(t *testing.T, name, prefix string, rows ...string) string {
 	repo := "o/" + strings.ReplaceAll(strings.TrimPrefix(name, "@"), "/", "-")
 	d := filepath.Join(t.TempDir(), repo)
 	os.MkdirAll(filepath.Join(d, "specs"), 0o755)
-	os.WriteFile(filepath.Join(d, "README.md"), []byte("---\nspechub: 1\nname: \""+name+"\"\n---\n# "+name+"\n"), 0o644)
+	os.WriteFile(filepath.Join(d, "README.md"), []byte("---\nspecfork: 1\nname: \""+name+"\"\n---\n# "+name+"\n"), 0o644)
 	area := "# A\n\n**Status:** Draft · **Prefix:** " + prefix + "\n\n| ID | Requirement | Verified by |\n|---|---|---|\n" + strings.Join(rows, "\n") + "\n"
 	os.WriteFile(filepath.Join(d, "specs", "a.md"), []byte(area), 0o644)
 	f.dir[repo] = d
@@ -158,7 +158,7 @@ func TestLockfile(t *testing.T) {
 		t.Fatal(err)
 	}
 	lock := sel.Lock()
-	p := filepath.Join(t.TempDir(), "spechub.lock")
+	p := filepath.Join(t.TempDir(), "specfork.lock")
 	if err := WriteLock(p, lock); err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +213,7 @@ func TestBundleLayoutAndRewrite(t *testing.T) {
 	if !strings.Contains(md, "# Bundle: @x/app@0.2.0") || strings.Index(md, "@x/auth](") > strings.Index(md, "@x/app](") {
 		t.Errorf("BUNDLE.md order:\n%s", md)
 	}
-	out := filepath.Join(t.TempDir(), "spechub-bundle")
+	out := filepath.Join(t.TempDir(), "specfork-bundle")
 	if err := b.Write(out); err != nil {
 		t.Fatal(err)
 	}

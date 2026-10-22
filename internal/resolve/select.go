@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/semver"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/semver"
 )
 
 // Node is one selected spec version.
@@ -38,7 +38,7 @@ func (s *Selection) Node(name string) *Node {
 	return nil
 }
 
-// Lock is spechub.lock (CMP-6).
+// Lock is specfork.lock (CMP-6).
 type Lock struct {
 	Root  string               `json:"root"`
 	Specs map[string]LockEntry `json:"specs"`
@@ -198,22 +198,22 @@ func fromLock(ix *index.Index, lock *Lock) (*Selection, error) {
 		}
 		v, err := semver.Parse(e.Version)
 		if err != nil {
-			return nil, fmt.Errorf("spechub.lock %s: %w", name, err)
+			return nil, fmt.Errorf("specfork.lock %s: %w", name, err)
 		}
 		snap, _, ok := s.At(v)
 		if !ok {
-			return nil, fmt.Errorf("spechub.lock pins %s@%s, which the index no longer has; use --update", name, e.Version)
+			return nil, fmt.Errorf("specfork.lock pins %s@%s, which the index no longer has; use --update", name, e.Version)
 		}
 		nodes[name] = &Node{Name: name, Version: v, SHA: e.SHA, Repo: s.Repo, Spec: s, Snapshot: snap}
 		for dep := range snap.Requires {
 			if _, ok := lock.Specs[dep]; !ok {
-				return nil, fmt.Errorf("spechub.lock misses %s (required by %s); use --update", dep, name)
+				return nil, fmt.Errorf("specfork.lock misses %s (required by %s); use --update", dep, name)
 			}
 			graph[name] = append(graph[name], dep)
 		}
 	}
 	if _, ok := nodes[lock.Root]; !ok {
-		return nil, fmt.Errorf("spechub.lock doesn't pin its root %s", lock.Root)
+		return nil, fmt.Errorf("specfork.lock doesn't pin its root %s", lock.Root)
 	}
 	order, err := topo(lock.Root, graph)
 	if err != nil {

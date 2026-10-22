@@ -1,6 +1,6 @@
 ---
 name: extract-spec
-description: Extract a stack-free SpecHub seed spec from an open-source app repo. Use when asked to /extract-spec <repo-url> or to add a seed spec from an existing app.
+description: Extract a stack-free Specfork seed spec from an open-source app repo. Use when asked to /extract-spec <repo-url> or to add a seed spec from an existing app.
 ---
 
 # Extract a seed spec
@@ -23,9 +23,9 @@ One agent per area, each returning testable rules with file:line citations, flag
 
 ## 3. Write
 
-- Base specs first: reuse a published base (`spechub search`), e.g. `@spechub/auth`; add rows to it (in its repo) only when the source shows behaviour the base lacks.
+- Base specs first: reuse a published base (`specfork search`), e.g. `@specfork/auth`; add rows to it (in its repo) only when the source shows behaviour the base lacks.
 - App spec in `seeds/<name>/`:
-  - Draft in `seeds/<name>/` (gitignored). `README.md` front matter: `spechub: 1`, `name: "@spechub/<name>"`, `summary`, `license: CC-BY-4.0`, `requires`, `derived_from: {repo, commit, url, license}`; body: what the app is, area table.
+  - Draft in `seeds/<name>/` (gitignored). `README.md` front matter: `specfork: 1`, `name: "@specfork/<name>"`, `summary`, `license: CC-BY-4.0`, `requires`, `derived_from: {repo, commit, url, license}`; body: what the app is, area table.
   - `specs/<area>.md` per area in the FMT-3 format. One testable rule per row. Name fields, enums, limits, defaults.
   - `Verified by`: inputs → expected outcome, no stack names.
 - Describe behaviour in your own words. No code, identifiers or UI text copied (EXT-3). Drop product-specific features (list them under Out of scope).
@@ -33,15 +33,15 @@ One agent per area, each returning testable rules with file:line citations, flag
 ## 4. Check
 
 - Every row testable and stack-free; IDs unique; prefixes unique in the repo.
-- `spechub lint seeds/<name>` passes; every `requires` target is published.
+- `specfork lint seeds/<name>` passes; every `requires` target is published.
 - A reader could build a usable product from the bundle without seeing the source.
 - Copy check (EXT-9): `python3 -I .claude/skills/extract-spec/overlap.py .sources/<repo> seeds/<name>` shows only lists of functional names.
 - The README says the seed is not affiliated with or endorsed by the source's owner (EXT-10). Skip files the source licenses commercially.
 
 ## 5. Publish
 
-Create `MajidBabaeifar/spechub-<name>` from `seeds/<name>/`, add topic `spechub`, tag `v0.1.0`, and add the name to `registry/names.json` by PR (`@spechub` claims are merged by a maintainer).
+Create `specfork/<name>` from `seeds/<name>/`, add topic `specfork`, tag `v0.1.0`, and add the name to `registry/names.json` by PR (`@specfork` claims are merged by a maintainer).
 
 ## 6. Prove (separate session)
 
-`spechub resolve @spechub/<name>`, build it in a different stack, fix the spec where the build went wrong (EXT-7), publish the rebuild with topic `spechub-impl`.
+`specfork resolve @specfork/<name>`, build it in a different stack, fix the spec where the build went wrong (EXT-7), publish the rebuild with topic `specfork-impl`.

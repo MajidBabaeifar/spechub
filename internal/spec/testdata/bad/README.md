@@ -1,9 +1,9 @@
 ---
-spechub: 2
+specfork: 2
 name: "@Bad/Name"
 license: "not a licence!"
 requires:
-  "@spechub/auth": "^x"
+  "@specfork/auth": "^x"
 overrides:
   "AUTH-1": removed
 colour: blue

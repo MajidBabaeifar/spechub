@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/resolve"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/resolve"
 )
 
 //go:embed templates/*.html templates/style.css
@@ -36,8 +36,8 @@ var tmpl = template.Must(template.New("").Funcs(template.FuncMap{
 	},
 }).ParseFS(files, "templates/*.html"))
 
-// Repo is where SpecHub's own code lives.
-const Repo = "MajidBabaeifar/spechub"
+// Repo is where Specfork's own code lives.
+const Repo = "specfork/specfork"
 
 type specPage struct {
 	Root       string

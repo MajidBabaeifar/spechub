@@ -1,29 +1,29 @@
-# SpecHub
+# Specfork
 
-App specs that agents can find, compose and build from. Specs don't depend on a stack: one spec, many implementations.
+**Recipes for software.** Fork an app spec, change what you need, and let your coding agent build it. Specs don't depend on a stack: one recipe, many implementations.
 
-**Browse:** https://majidbabaeifar.github.io/spechub/
+**Browse:** https://specfork.github.io/specfork/
 
 ## Install
 
 ```bash
-go install github.com/MajidBabaeifar/spechub/cmd/spechub@latest
+go install github.com/specfork/specfork/cmd/specfork@latest
 ```
 
 ## Use
 
 ```bash
-spechub search booking
-spechub info @spechub/scheduling
-spechub resolve @spechub/scheduling
+specfork search booking
+specfork info @specfork/scheduling
+specfork resolve @specfork/scheduling
 ```
 
-`resolve` writes `spechub-bundle/` (the spec and everything it requires, IDs made global, overrides applied) and `spechub.lock`. Point your agent at `spechub-bundle/BUNDLE.md`.
+`resolve` writes `specfork-bundle/` (the spec and everything it requires, IDs made global, overrides applied) and `specfork.lock`. Point your agent at `specfork-bundle/BUNDLE.md`.
 
 Let the agent do it itself over MCP:
 
 ```bash
-claude mcp add spechub -- spechub mcp
+claude mcp add specfork -- specfork mcp
 ```
 
 Tools: `search_specs`, `get_spec`, `resolve_spec`.
@@ -34,20 +34,20 @@ Tools: `search_specs`, `get_spec`, `resolve_spec`.
 
    ```yaml
    ---
-   spechub: 1
+   specfork: 1
    name: "@your-login/booking"
    summary: One line, ≤ 200 chars.
    license: CC-BY-4.0
    requires:
-     "@spechub/auth": "^0.1"
+     "@specfork/auth": "^0.1"
    overrides:
-     "@spechub/auth:AUTH-8": removed
+     "@specfork/auth:AUTH-8": removed
    ---
    ```
 
    Each area has `**Status:**`, `**Prefix:**` and a table `| ID | Requirement | Verified by |`. Format: [specs/format.md](specs/format.md).
-2. `spechub lint .` until it passes.
-3. Add the topic `spechub` and tag a release: `git tag v0.1.0 && git push --tags`.
+2. `specfork lint .` until it passes.
+3. Add the topic `specfork` and tag a release: `git tag v0.1.0 && git push --tags`.
 4. [Claim the name](#claim-a-name).
 
 ## Claim a name
@@ -62,11 +62,11 @@ Get the IDs with `gh api repos/your-login/booking --jq '{repo_id: .id, owner_id:
 
 ## Publish an implementation
 
-Built something from a spec? Add the topic `spechub-impl` and front matter to its README:
+Built something from a spec? Add the topic `specfork-impl` and front matter to its README:
 
 ```yaml
 ---
-implements: "@spechub/scheduling@0.1.0"
+implements: "@specfork/scheduling@0.1.0"
 stack: [go, sqlite]
 url: https://your-live-app.example
 ---
@@ -76,10 +76,10 @@ It shows up on the spec's page.
 
 ## How it works
 
-- Specs live in their own repos; SpecHub stores no copies ([IDX](specs/index.md)).
+- Specs live in their own repos; Specfork stores no copies ([IDX](specs/index.md)).
 - Names are bound to GitHub repo and owner IDs, so a renamed repo is followed and a transferred one is frozen ([REG](specs/registry.md)).
 - An hourly workflow crawls GitHub and publishes `index.json` and the site to Pages.
-- `resolve` uses minimal version selection, pins commits in `spechub.lock`, and fetches files by SHA ([CMP](specs/compose.md)).
+- `resolve` uses minimal version selection, pins commits in `specfork.lock`, and fetches files by SHA ([CMP](specs/compose.md)).
 - Seed specs are extracted from open-source apps and proven by rebuilding them in another stack ([EXT](specs/extract.md)).
 
 Specs: [specs/README.md](specs/README.md).

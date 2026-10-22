@@ -1,4 +1,4 @@
-// Package semver parses MAJOR.MINOR.PATCH versions and SpecHub ranges (CMP-1).
+// Package semver parses MAJOR.MINOR.PATCH versions and Specfork ranges (CMP-1).
 package semver
 
 import (

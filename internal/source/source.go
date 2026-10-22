@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
+	"github.com/specfork/specfork/internal/index"
 )
 
 // Fetcher returns one file of a repo at a commit SHA.

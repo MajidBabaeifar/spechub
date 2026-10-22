@@ -19,7 +19,7 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Check and merge
-        run: go run ./cmd/spechub claim-check --repo "$GITHUB_REPOSITORY" --pr "$PR" --merge
+        run: go run ./cmd/specfork claim-check --repo "$GITHUB_REPOSITORY" --pr "$PR" --merge
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}

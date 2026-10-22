@@ -15,6 +15,6 @@ Short but technical: interfaces, fields, formulas, limits. ~30 lines per spec.
 | [registry.md](registry.md) | REG | Scoped names, claims by PR, binding to repo/owner IDs, freezes |
 | [index.md](index.md) | IDX | Crawler, `index.json`, change detection, rate limits |
 | [compose.md](compose.md) | CMP | `requires`, version selection, global IDs, overrides, lockfile, bundle |
-| [cli.md](cli.md) | CLI | `spechub search`, `info`, `resolve`, `lint` |
+| [cli.md](cli.md) | CLI | `specfork search`, `info`, `resolve`, `lint` |
 | [mcp.md](mcp.md) | MCP | MCP server for agents, usage counters |
 | [extract.md](extract.md) | EXT | Seed pipeline: extract from open-source app, factor bases, rebuild, publish |

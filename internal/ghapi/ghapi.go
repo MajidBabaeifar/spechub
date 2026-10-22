@@ -79,7 +79,7 @@ func (c *Client) Do(method, path string, body, out any) error {
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
-	req.Header.Set("User-Agent", "spechub-crawler")
+	req.Header.Set("User-Agent", "specfork-crawler")
 	if c.Token != "" {
 		req.Header.Set("Authorization", "Bearer "+c.Token)
 	}
@@ -134,7 +134,7 @@ type Owner struct {
 	Type  string `json:"type"` // User or Organization
 }
 
-// Repo is the subset of repository fields SpecHub reads (IDX-3).
+// Repo is the subset of repository fields Specfork reads (IDX-3).
 type Repo struct {
 	ID            int64    `json:"id"`
 	FullName      string   `json:"full_name"`
@@ -283,7 +283,7 @@ func (c *Client) Raw(full, sha, path string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "spechub-crawler")
+	req.Header.Set("User-Agent", "specfork-crawler")
 	resp, err := c.HTTP.Do(req)
 	if err != nil {
 		return nil, err

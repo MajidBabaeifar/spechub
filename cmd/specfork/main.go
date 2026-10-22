@@ -1,4 +1,4 @@
-// Command spechub finds, lints and resolves SpecHub specs (CLI), serves MCP (MCP),
+// Command specfork finds, lints and resolves Specfork specs (CLI), serves MCP (MCP),
 // and runs the index and claim workflows.
 package main
 
@@ -18,15 +18,15 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/MajidBabaeifar/spechub/internal/crawl"
-	"github.com/MajidBabaeifar/spechub/internal/ghapi"
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/mcpserver"
-	"github.com/MajidBabaeifar/spechub/internal/registry"
-	"github.com/MajidBabaeifar/spechub/internal/resolve"
-	"github.com/MajidBabaeifar/spechub/internal/site"
-	"github.com/MajidBabaeifar/spechub/internal/source"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/crawl"
+	"github.com/specfork/specfork/internal/ghapi"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/mcpserver"
+	"github.com/specfork/specfork/internal/registry"
+	"github.com/specfork/specfork/internal/resolve"
+	"github.com/specfork/specfork/internal/site"
+	"github.com/specfork/specfork/internal/source"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // Exit codes (CLI-9).
@@ -51,17 +51,17 @@ type failure struct{}
 
 func (failure) Error() string { return "" }
 
-const usage = `spechub: find, compose and build from app specs
+const usage = `specfork: find, compose and build from app specs
 
-  spechub search <query> [--json]          find specs
-  spechub info <name>[@version] [--json]   versions, requires, implementations
-  spechub resolve <name>[@range] [--out dir] [--update]
-                                           write the bundle and spechub.lock
-  spechub lint [dir]                       check a spec repo
-  spechub mcp                              MCP server on stdio
-  spechub version
+  specfork search <query> [--json]          find specs
+  specfork info <name>[@version] [--json]   versions, requires, implementations
+  specfork resolve <name>[@range] [--out dir] [--update]
+                                           write the bundle and specfork.lock
+  specfork lint [dir]                       check a spec repo
+  specfork mcp                              MCP server on stdio
+  specfork version
 
-Index: $SPECHUB_INDEX or ` + index.DefaultURL + `
+Index: $SPECFORK_INDEX or ` + index.DefaultURL + `
 `
 
 // app holds swappable dependencies for tests.
@@ -117,24 +117,24 @@ func (a *app) run(args []string) int {
 	case err == nil:
 		return exitOK
 	case errors.As(err, &ue):
-		fmt.Fprintf(a.stderr, "spechub: %s\n\n%s", err, usage)
+		fmt.Fprintf(a.stderr, "specfork: %s\n\n%s", err, usage)
 		return exitUsage
 	case errors.As(err, &ne):
-		fmt.Fprintf(a.stderr, "spechub: %s\n", err)
+		fmt.Fprintf(a.stderr, "specfork: %s\n", err)
 		return exitNetwork
 	case errors.Is(err, failure{}):
 		return exitFail
 	default:
-		fmt.Fprintf(a.stderr, "spechub: %s\n", err)
+		fmt.Fprintf(a.stderr, "specfork: %s\n", err)
 		return exitFail
 	}
 }
 
 func version() string {
 	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" {
-		return "spechub " + bi.Main.Version
+		return "specfork " + bi.Main.Version
 	}
-	return "spechub (devel)"
+	return "specfork (devel)"
 }
 
 // parse splits flags from positional args so flags may follow them.
@@ -220,7 +220,7 @@ func (a *app) info(args []string) error {
 
 func (a *app) resolve(args []string) error {
 	fs := flag.NewFlagSet("resolve", flag.ContinueOnError)
-	out := fs.String("out", "spechub-bundle", "")
+	out := fs.String("out", "specfork-bundle", "")
 	update := fs.Bool("update", false, "")
 	pos, err := parse(fs, args)
 	if err != nil {
@@ -236,14 +236,14 @@ func (a *app) resolve(args []string) error {
 	}
 	var lock *resolve.Lock
 	if !*update {
-		if lock, err = resolve.ReadLock("spechub.lock"); err != nil {
+		if lock, err = resolve.ReadLock("specfork.lock"); err != nil {
 			return err
 		}
 		if lock != nil && lock.Root != name {
 			lock = nil
 		}
 		if lock != nil && rng != "" {
-			return usageError{"spechub.lock pins " + name + "; drop the range or pass --update"}
+			return usageError{"specfork.lock pins " + name + "; drop the range or pass --update"}
 		}
 	}
 	sel, err := resolve.Select(ix, name, rng, lock)
@@ -257,13 +257,13 @@ func (a *app) resolve(args []string) error {
 	if err := b.Write(*out); err != nil {
 		return err
 	}
-	if err := resolve.WriteLock("spechub.lock", sel.Lock()); err != nil {
+	if err := resolve.WriteLock("specfork.lock", sel.Lock()); err != nil {
 		return err
 	}
 	for _, n := range sel.Order {
 		fmt.Fprintf(a.stdout, "%s@%s  %s\n", n.Name, n.Version, short(n.SHA))
 	}
-	fmt.Fprintf(a.stdout, "wrote %s/ (%d files) and spechub.lock; start at %s/BUNDLE.md\n", *out, len(b.Paths), *out)
+	fmt.Fprintf(a.stdout, "wrote %s/ (%d files) and specfork.lock; start at %s/BUNDLE.md\n", *out, len(b.Paths), *out)
 	return nil
 }
 
@@ -397,7 +397,7 @@ func (a *app) claimCheck(args []string) error {
 		}
 		return nil
 	}
-	body := "SpecHub claim check didn't pass:\n\n- " + strings.Join(problems, "\n- ")
+	body := "Specfork claim check didn't pass:\n\n- " + strings.Join(problems, "\n- ")
 	if verdict.Manual {
 		body += "\n\nA maintainer needs to review this PR."
 	}

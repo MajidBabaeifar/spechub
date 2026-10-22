@@ -9,7 +9,7 @@ import (
 
 // FMT-1, FMT-2: front matter is read and checked.
 func TestFrontMatterSchema(t *testing.T) {
-	fm, err := ParseFrontMatter([]byte("---\nspechub: 1\nname: \"@a/b\"\nsummary: s\nlicense: MIT\nrequires:\n  \"@a/c\": \"^0.1\"\nwhat: 1\n---\n# body\n"))
+	fm, err := ParseFrontMatter([]byte("---\nspecfork: 1\nname: \"@a/b\"\nsummary: s\nlicense: MIT\nrequires:\n  \"@a/c\": \"^0.1\"\nwhat: 1\n---\n# body\n"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,12 +23,12 @@ func TestFrontMatterSchema(t *testing.T) {
 
 // FMT-8: implementation front matter.
 func TestDetectImplRepo(t *testing.T) {
-	fm, err := ParseFrontMatter([]byte("---\nimplements: \"@spechub/scheduling@0.1.0\"\nstack: [go, sqlite]\nurl: https://x.example\n---\n"))
+	fm, err := ParseFrontMatter([]byte("---\nimplements: \"@specfork/scheduling@0.1.0\"\nstack: [go, sqlite]\nurl: https://x.example\n---\n"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	name, ver := SplitNameVersion(fm.Implements)
-	if name != "@spechub/scheduling" || ver != "0.1.0" || len(fm.Stack) != 2 {
+	if name != "@specfork/scheduling" || ver != "0.1.0" || len(fm.Stack) != 2 {
 		t.Fatalf("got %q %q %v", name, ver, fm.Stack)
 	}
 }
@@ -69,11 +69,11 @@ func TestLintAreas(t *testing.T) {
 	}
 	got := strings.Join(all, "\n")
 	for _, want := range []string{
-		"FMT-1: front matter needs `spechub: 1`",
+		"FMT-1: front matter needs `specfork: 1`",
 		"FMT-2: name \"@Bad/Name\"",
 		"FMT-2: `summary` is required",
 		"is not an SPDX expression",
-		"requires @spechub/auth",
+		"requires @specfork/auth",
 		"\"AUTH-1\" is not a global ID",
 		"warning FMT-2: unknown front matter field \"colour\"",
 		"one.md:10: error FMT-4: ONE-1 also defined",
@@ -97,7 +97,7 @@ func TestLintAreas(t *testing.T) {
 func TestLintVerifiedByRequired(t *testing.T) {
 	dir := t.TempDir()
 	os.MkdirAll(filepath.Join(dir, "specs"), 0o755)
-	os.WriteFile(filepath.Join(dir, "README.md"), []byte("---\nspechub: 1\nname: \"@a/b\"\nsummary: s\nlicense: MIT\n---\n"), 0o644)
+	os.WriteFile(filepath.Join(dir, "README.md"), []byte("---\nspecfork: 1\nname: \"@a/b\"\nsummary: s\nlicense: MIT\n---\n"), 0o644)
 	os.WriteFile(filepath.Join(dir, "specs", "a.md"), []byte("# A\n\n**Status:** Draft · **Prefix:** A\n\n| ID | Requirement | Verified by |\n|---|---|---|\n| A-1 | x | y |\n"), 0o644)
 	issues, err := LintDir(dir)
 	if err != nil || len(issues) != 0 {

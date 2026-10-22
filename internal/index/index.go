@@ -12,12 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MajidBabaeifar/spechub/internal/semver"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/semver"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // DefaultURL is where the index workflow publishes (IDX-9).
-const DefaultURL = "https://majidbabaeifar.github.io/spechub/index.json"
+const DefaultURL = "https://specfork.github.io/specfork/index.json"
 
 // CacheTTL bounds how long a fetched index is reused (CLI-5).
 const CacheTTL = 10 * time.Minute
@@ -160,9 +160,9 @@ func (ix *Index) Search(q string) []Spec {
 	return out
 }
 
-// Source returns SPECHUB_INDEX or the default URL.
+// Source returns SPECFORK_INDEX or the default URL.
 func Source() string {
-	if s := os.Getenv("SPECHUB_INDEX"); s != "" {
+	if s := os.Getenv("SPECFORK_INDEX"); s != "" {
 		return s
 	}
 	return DefaultURL
@@ -193,7 +193,7 @@ func cachePath(url string) string {
 		return ""
 	}
 	name := strings.NewReplacer("://", "_", "/", "_", ":", "_").Replace(url)
-	return filepath.Join(dir, "spechub", name)
+	return filepath.Join(dir, "specfork", name)
 }
 
 func fetchCached(url string) ([]byte, error) {
@@ -225,7 +225,7 @@ func Get(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "spechub-cli")
+	req.Header.Set("User-Agent", "specfork-cli")
 	resp, err := Client.Do(req)
 	if err != nil {
 		return nil, err

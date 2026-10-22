@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/ghapi"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/ghapi"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // Entry binds one name to a repo (REG-1, REG-4).
@@ -27,7 +27,7 @@ type Names struct {
 }
 
 // ReservedScope is claimable only by maintainers (REG-3).
-const ReservedScope = "@spechub"
+const ReservedScope = "@specfork"
 
 func Parse(b []byte) (*Names, error) {
 	var n Names
@@ -156,8 +156,8 @@ func CheckClaim(base, head *Names, author string, gh GitHub) Verdict {
 		if Scope(name) != ReservedScope && Scope(name) != "@"+strings.ToLower(repo.Owner.Login) {
 			bad("scope must be @%s, the repo owner's login", strings.ToLower(repo.Owner.Login))
 		}
-		if !repo.HasTopic("spechub") {
-			bad("%s lacks the `spechub` topic", repo.FullName)
+		if !repo.HasTopic("specfork") {
+			bad("%s lacks the `specfork` topic", repo.FullName)
 		}
 		if sha, err := gh.BranchSHA(repo.FullName, repo.DefaultBranch); err != nil {
 			bad("can't read %s: %v", repo.FullName, err)

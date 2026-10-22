@@ -1,4 +1,4 @@
-// Package spec parses SpecHub spec repos: README front matter (FMT-1, FMT-2, FMT-8)
+// Package spec parses Specfork spec repos: README front matter (FMT-1, FMT-2, FMT-8)
 // and requirement areas (FMT-3..5).
 package spec
 
@@ -35,7 +35,7 @@ type DerivedFrom struct {
 
 // FrontMatter is the YAML block at the top of a spec or implementation README.
 type FrontMatter struct {
-	Spechub     int               `yaml:"spechub"`
+	Specfork    int               `yaml:"specfork"`
 	Name        string            `yaml:"name"`
 	Summary     string            `yaml:"summary"`
 	License     string            `yaml:"license"`
@@ -52,7 +52,7 @@ type FrontMatter struct {
 }
 
 var knownKeys = map[string]bool{
-	"spechub": true, "name": true, "summary": true, "license": true, "requires": true,
+	"specfork": true, "name": true, "summary": true, "license": true, "requires": true,
 	"base": true, "derived_from": true, "overrides": true,
 	"implements": true, "stack": true, "url": true,
 }

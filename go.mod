@@ -1,4 +1,4 @@
-module github.com/MajidBabaeifar/spechub
+module github.com/specfork/specfork
 
 go 1.25.0
 

@@ -1,12 +1,12 @@
 ---
-spechub: 1
-name: "@spechub/scheduling"
+specfork: 1
+name: "@specfork/scheduling"
 summary: Booking pages with availability, team round robin, calendar sync, payments and webhooks.
 license: CC-BY-4.0
 requires:
-  "@spechub/auth": "^0.1"
-  "@spechub/teams": "^0.1"
-  "@spechub/webhooks": "^0.1"
+  "@specfork/auth": "^0.1"
+  "@specfork/teams": "^0.1"
+  "@specfork/webhooks": "^0.1"
 derived_from:
   repo: https://github.com/calcom/cal.com
   commit: 0f19cc46ef6b6426ee398c670575b3c96be7af9e

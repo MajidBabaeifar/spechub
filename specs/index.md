@@ -10,15 +10,15 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| IDX-1 | The `index` workflow runs hourly, on pushes to `main` and on demand: `spechub crawl` searches `topic:spechub fork:true` and `topic:spechub-impl fork:true`, and looks up every repo in `names.json` by `repo_id`. | TestCrawlSources |
+| IDX-1 | The `index` workflow runs hourly, on pushes to `main` and on demand: `specfork crawl` searches `topic:specfork fork:true` and `topic:specfork-impl fork:true`, and looks up every repo in `names.json` by `repo_id`. | TestCrawlSources |
 | IDX-2 | Search results over 1,000 (GitHub's cap per query) are split by `created:` date ranges until each range is under the cap. | TestSearchPartition |
-| IDX-3 | Per spec repo it reads: `repo_id`, `owner_id`, current `owner/repo`, `stargazers_count`, `pushed_at`, topics; default-branch head SHA and every `v*` semver tag with its commit SHA; at each of those commits the README front matter and the list of `specs/*.md` paths. No other file contents. | TestFieldsRead |
+| IDX-3 | Per spec repo it reads: `repo_id`, `owner_id`, current `owner/repo`, `stargazers_count`, `pushed_at`, topics; default-branch head SHA and every `v*` semver tag with its commit SHA; at each of those commits the README front matter and the list of `specs/*.md` paths. A tag whose front matter lacks `specfork: 1` or names a different spec than the head is ignored. No other file contents. | TestFieldsRead, TestOldNameTagsIgnored |
 | IDX-4 | Only names `active` in the registry, bound to the repo's IDs and not frozen ([REG-5](registry.md)) are resolvable; other spec repos appear under `unclaimed`. | TestUnclaimed |
 | IDX-5 | Change detection: the previous `index.json` is fetched from the site; a spec whose head SHA and tag set are unchanged is copied from it without further reads. | TestSkipUnchanged |
 | IDX-6 | `index.json`: `{generated_at, specs: [{name, repo, repo_id, owner_id, state, summary, license, stars, pushed_at, derived_from, base, head_sha, head: {requires, overrides, files}, versions: [{version, sha, requires, overrides, files}], implementations: [{repo, stack, url, version}]}], unclaimed: [repo]}`; versions sorted newest first. | TestIndexSchema |
 | IDX-7 | Implementations attach to a spec by their `implements` name; unknown names are dropped. | TestImplAttach |
 | IDX-8 | The crawler uses one token, honours `X-RateLimit-Remaining` per `X-RateLimit-Resource` (stops when `core` < 100 or `search` < 2, keeping the previous entries for unread specs), and never scrapes HTML. | TestRateLimitStop, TestRateLimitPerResource |
-| IDX-9 | The workflow publishes `index.json` and a static site to GitHub Pages at `https://majidbabaeifar.github.io/spechub/`: a searchable list, and a page per spec with versions, requires, required-by, implementations, areas (linked to GitHub at the commit) and the `resolve` command. | TestSitePages; manual: open a seed page |
+| IDX-9 | The workflow publishes `index.json` and a static site to GitHub Pages at `https://specfork.github.io/specfork/`: a searchable list, and a page per spec with versions, requires, required-by, implementations, areas (linked to GitHub at the commit) and the `resolve` command. | TestSitePages; manual: open a seed page |
 
 ## Out of scope
 
@@ -28,4 +28,4 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 ## Decisions
 
 - Published to Pages, not committed: no bot commits in `main`; the previous index on the site is the crawler's memory.
-- GitHub Pages and Actions fit GitHub's terms while SpecHub is non-commercial and the crawl publishes this project's own site (≈25 API calls/hour). Before charging for anything, move the site and crawler to paid hosting: Pages is not for running a business.
+- GitHub Pages and Actions fit GitHub's terms while Specfork is non-commercial and the crawl publishes this project's own site (≈25 API calls/hour). Before charging for anything, move the site and crawler to paid hosting: Pages is not for running a business.

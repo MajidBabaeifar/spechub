@@ -126,6 +126,13 @@
       "repo_id": 1429303807,
       "state": "active"
     },
+    "@specfork/web-analytics": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/web-analytics",
+      "repo_id": 1429303916,
+      "state": "active"
+    },
     "@specfork/webhooks": {
       "claimed_at": "2026-10-22",
       "owner_id": 346204958,

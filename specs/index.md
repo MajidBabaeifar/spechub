@@ -1,6 +1,6 @@
 # Index
 
-**Status:** Draft · **Prefix:** IDX
+**Status:** Live · **Prefix:** IDX
 
 ## Purpose
 

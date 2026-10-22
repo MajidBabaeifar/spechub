@@ -1,6 +1,6 @@
 # Registry
 
-**Status:** Draft · **Prefix:** REG
+**Status:** Live · **Prefix:** REG
 
 ## Purpose
 

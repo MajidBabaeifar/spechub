@@ -1,6 +1,6 @@
 # Extract
 
-**Status:** Draft · **Prefix:** EXT
+**Status:** Live · **Prefix:** EXT
 
 ## Purpose
 

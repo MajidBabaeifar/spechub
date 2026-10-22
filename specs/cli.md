@@ -1,6 +1,6 @@
 # CLI
 
-**Status:** Draft · **Prefix:** CLI
+**Status:** Live · **Prefix:** CLI
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # Format
 
-**Status:** Draft · **Prefix:** FMT
+**Status:** Live · **Prefix:** FMT
 
 ## Purpose
 

@@ -9,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/source"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/source"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // Bundle is the flattened output (CMP-7..9): file path → content, in order.

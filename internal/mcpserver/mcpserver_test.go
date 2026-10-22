@@ -8,8 +8,8 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/testfx"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/testfx"
 )
 
 func connect(t *testing.T) *mcp.ClientSession {
@@ -63,24 +63,24 @@ func TestMCPTools(t *testing.T) {
 	}
 	var found SearchOut
 	json.Unmarshal([]byte(text(t, r)), &found)
-	if len(found.Specs) != 1 || found.Specs[0].Name != "@spechub/scheduling" {
+	if len(found.Specs) != 1 || found.Specs[0].Name != "@specfork/scheduling" {
 		t.Fatalf("search %+v", found)
 	}
-	r, err = cs.CallTool(ctx, &mcp.CallToolParams{Name: "get_spec", Arguments: map[string]any{"name": "@spechub/auth"}})
+	r, err = cs.CallTool(ctx, &mcp.CallToolParams{Name: "get_spec", Arguments: map[string]any{"name": "@specfork/auth"}})
 	if err != nil {
 		t.Fatal(err)
 	}
 	var info GetOut
 	json.Unmarshal([]byte(text(t, r)), &info)
-	if info.Version != "0.1.0" || strings.Join(info.RequiredBy, ",") != "@spechub/scheduling,@spechub/teams" {
+	if info.Version != "0.1.0" || strings.Join(info.RequiredBy, ",") != "@specfork/scheduling,@specfork/teams" {
 		t.Fatalf("info %+v", info)
 	}
-	r, err = cs.CallTool(ctx, &mcp.CallToolParams{Name: "resolve_spec", Arguments: map[string]any{"name": "@spechub/scheduling"}})
+	r, err = cs.CallTool(ctx, &mcp.CallToolParams{Name: "resolve_spec", Arguments: map[string]any{"name": "@specfork/scheduling"}})
 	if err != nil {
 		t.Fatal(err)
 	}
 	doc := text(t, r)
-	if !strings.HasPrefix(doc, "# Bundle: @spechub/scheduling@0.1.0") || !strings.Contains(doc, "| @spechub/scheduling:SLT-1 |") || !strings.Contains(doc, "<!-- file: spechub/auth/specs/auth.md -->") {
+	if !strings.HasPrefix(doc, "# Bundle: @specfork/scheduling@0.1.0") || !strings.Contains(doc, "| @specfork/scheduling:SLT-1 |") || !strings.Contains(doc, "<!-- file: specfork/auth/specs/auth.md -->") {
 		t.Fatalf("bundle starts %q", doc[:200])
 	}
 	r, _ = cs.CallTool(ctx, &mcp.CallToolParams{Name: "resolve_spec", Arguments: map[string]any{"name": "@nobody/x"}})

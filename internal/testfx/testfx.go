@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/source"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/source"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // SeedsDir is the frozen v0.1.0 copy of the seed specs.
@@ -20,7 +20,7 @@ func SeedsDir() string {
 	return filepath.Join(filepath.Dir(file), "testdata", "seeds")
 }
 
-// Seeds indexes every seed as repo "MajidBabaeifar/spechub-<name>" at version 0.1.0.
+// Seeds indexes every seed as repo "specfork/<name>" at version 0.1.0.
 func Seeds(t testing.TB) (*index.Index, source.Dir) {
 	t.Helper()
 	dirs, _ := filepath.Glob(filepath.Join(SeedsDir(), "*", "README.md"))
@@ -39,7 +39,7 @@ func Seeds(t testing.TB) (*index.Index, source.Dir) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		repo := "MajidBabaeifar/spechub-" + filepath.Base(dir)
+		repo := "specfork/" + filepath.Base(dir)
 		fetch[repo] = dir
 		files, _ := filepath.Glob(filepath.Join(dir, "specs", "*.md"))
 		var rel []string

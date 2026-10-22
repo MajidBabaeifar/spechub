@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MajidBabaeifar/spechub/internal/ghapi"
+	"github.com/specfork/specfork/internal/ghapi"
 )
 
 type fakeGH struct {
@@ -33,14 +33,14 @@ func (f fakeGH) Permission(full, user string) (string, error) { return f.perms[f
 func gh() fakeGH {
 	return fakeGH{
 		repos: map[int64]ghapi.Repo{
-			10: {ID: 10, FullName: "ann/booking", Owner: ghapi.Owner{ID: 1, Login: "Ann", Type: "User"}, Topics: []string{"spechub"}, DefaultBranch: "main"},
-			20: {ID: 20, FullName: "acme/crm", Owner: ghapi.Owner{ID: 2, Login: "acme", Type: "Organization"}, Topics: []string{"spechub"}, DefaultBranch: "main"},
+			10: {ID: 10, FullName: "ann/booking", Owner: ghapi.Owner{ID: 1, Login: "Ann", Type: "User"}, Topics: []string{"specfork"}, DefaultBranch: "main"},
+			20: {ID: 20, FullName: "acme/crm", Owner: ghapi.Owner{ID: 2, Login: "acme", Type: "Organization"}, Topics: []string{"specfork"}, DefaultBranch: "main"},
 			30: {ID: 30, FullName: "ann/notopic", Owner: ghapi.Owner{ID: 1, Login: "Ann", Type: "User"}, DefaultBranch: "main"},
 		},
 		readme: map[string]string{
-			"ann/booking": "---\nspechub: 1\nname: \"@ann/booking\"\n---\n",
-			"acme/crm":    "---\nspechub: 1\nname: \"@acme/crm\"\n---\n",
-			"ann/notopic": "---\nspechub: 1\nname: \"@ann/other\"\n---\n",
+			"ann/booking": "---\nspecfork: 1\nname: \"@ann/booking\"\n---\n",
+			"acme/crm":    "---\nspecfork: 1\nname: \"@acme/crm\"\n---\n",
+			"ann/notopic": "---\nspecfork: 1\nname: \"@ann/other\"\n---\n",
 		},
 		perms: map[string]string{"acme/crm/bob": "admin", "acme/crm/eve": "write"},
 	}
@@ -82,7 +82,7 @@ func TestClaimChecks(t *testing.T) {
 	}{
 		{map[string]Entry{"@acme/crm": entry(20, 2, "acme/crm")}, "eve", "eve needs admin"},
 		{map[string]Entry{"@ann/booking": entry(10, 1, "ann/booking")}, "mallory", "only Ann can claim"},
-		{map[string]Entry{"@ann/other": entry(30, 1, "ann/notopic")}, "ann", "lacks the `spechub` topic"},
+		{map[string]Entry{"@ann/other": entry(30, 1, "ann/notopic")}, "ann", "lacks the `specfork` topic"},
 		{map[string]Entry{"@ann/wrong": entry(10, 1, "ann/booking")}, "ann", "README front matter name is \"@ann/booking\""},
 		{map[string]Entry{"@ann/booking": entry(99, 1, "ann/booking")}, "ann", "repo_id 99: not found"},
 	} {
@@ -110,8 +110,8 @@ func TestClaimScope(t *testing.T) {
 		t.Fatalf("got %v", v.Problems)
 	}
 	g := gh()
-	g.readme["ann/booking"] = "---\nspechub: 1\nname: \"@spechub/booking\"\n---\n"
-	v = CheckClaim(base, names(map[string]Entry{"@spechub/booking": entry(10, 1, "ann/booking")}), "ann", g)
+	g.readme["ann/booking"] = "---\nspecfork: 1\nname: \"@specfork/booking\"\n---\n"
+	v = CheckClaim(base, names(map[string]Entry{"@specfork/booking": entry(10, 1, "ann/booking")}), "ann", g)
 	if v.OK() || !v.Manual {
 		t.Fatalf("reserved scope auto-merged: %+v", v)
 	}

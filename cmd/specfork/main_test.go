@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/resolve"
-	"github.com/MajidBabaeifar/spechub/internal/testfx"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/resolve"
+	"github.com/specfork/specfork/internal/testfx"
 )
 
 func newApp(t *testing.T) (*app, *bytes.Buffer, *bytes.Buffer) {
@@ -27,13 +27,13 @@ func TestSearch(t *testing.T) {
 	if code := a.run([]string{"search", "team", "roles"}); code != exitOK {
 		t.Fatalf("exit %d", code)
 	}
-	if !strings.Contains(out.String(), "@spechub/teams") || strings.Contains(out.String(), "@spechub/auth ") {
+	if !strings.Contains(out.String(), "@specfork/teams") || strings.Contains(out.String(), "@specfork/auth ") {
 		t.Fatalf("output:\n%s", out)
 	}
 	out.Reset()
 	a.run([]string{"search", "--json", "SIGN-IN"})
 	var hits []map[string]any
-	if err := json.Unmarshal(out.Bytes(), &hits); err != nil || len(hits) != 1 || hits[0]["name"] != "@spechub/auth" {
+	if err := json.Unmarshal(out.Bytes(), &hits); err != nil || len(hits) != 1 || hits[0]["name"] != "@specfork/auth" {
 		t.Fatalf("json %s %v", out, err)
 	}
 }
@@ -41,10 +41,10 @@ func TestSearch(t *testing.T) {
 // CLI-2
 func TestInfo(t *testing.T) {
 	a, out, _ := newApp(t)
-	if code := a.run([]string{"info", "@spechub/scheduling"}); code != exitOK {
+	if code := a.run([]string{"info", "@specfork/scheduling"}); code != exitOK {
 		t.Fatalf("exit %d", code)
 	}
-	for _, want := range []string{"@spechub/scheduling 0.1.0 (active)", "requires:    @spechub/auth ^0.1, @spechub/teams ^0.1, @spechub/webhooks ^0.1", "github.com/calcom/cal.com (MIT)"} {
+	for _, want := range []string{"@specfork/scheduling 0.1.0 (active)", "requires:    @specfork/auth ^0.1, @specfork/teams ^0.1, @specfork/webhooks ^0.1", "github.com/calcom/cal.com (MIT)"} {
 		if !strings.Contains(out.String(), want) {
 			t.Errorf("missing %q in:\n%s", want, out)
 		}
@@ -58,26 +58,26 @@ func TestResolve(t *testing.T) {
 	wd, _ := os.Getwd()
 	os.Chdir(dir)
 	defer os.Chdir(wd)
-	if code := a.run([]string{"resolve", "@spechub/scheduling"}); code != exitOK {
+	if code := a.run([]string{"resolve", "@specfork/scheduling"}); code != exitOK {
 		t.Fatalf("exit %d: %s", code, out)
 	}
-	for _, p := range []string{"spechub-bundle/BUNDLE.md", "spechub-bundle/spechub/scheduling/specs/slots.md", "spechub-bundle/spechub/auth/README.md", "spechub.lock"} {
+	for _, p := range []string{"specfork-bundle/BUNDLE.md", "specfork-bundle/specfork/scheduling/specs/slots.md", "specfork-bundle/specfork/auth/README.md", "specfork.lock"} {
 		if _, err := os.Stat(filepath.Join(dir, p)); err != nil {
 			t.Errorf("missing %s", p)
 		}
 	}
-	lock, _ := resolve.ReadLock(filepath.Join(dir, "spechub.lock"))
-	if lock.Root != "@spechub/scheduling" || len(lock.Specs) != 4 || lock.Specs["@spechub/auth"].SHA != "v0.1.0-sha" {
+	lock, _ := resolve.ReadLock(filepath.Join(dir, "specfork.lock"))
+	if lock.Root != "@specfork/scheduling" || len(lock.Specs) != 4 || lock.Specs["@specfork/auth"].SHA != "v0.1.0-sha" {
 		t.Fatalf("lock %+v", lock)
 	}
-	slots, _ := os.ReadFile(filepath.Join(dir, "spechub-bundle/spechub/scheduling/specs/bookings.md"))
-	if !strings.Contains(string(slots), "| @spechub/scheduling:BKG-1 |") {
+	slots, _ := os.ReadFile(filepath.Join(dir, "specfork-bundle/specfork/scheduling/specs/bookings.md"))
+	if !strings.Contains(string(slots), "| @specfork/scheduling:BKG-1 |") {
 		t.Fatal("IDs not global in bundle")
 	}
-	if code := a.run([]string{"resolve", "@spechub/scheduling@^0.1"}); code != exitUsage {
+	if code := a.run([]string{"resolve", "@specfork/scheduling@^0.1"}); code != exitUsage {
 		t.Fatalf("range with a lock present: exit %d", code)
 	}
-	if code := a.run([]string{"resolve", "--update", "@spechub/scheduling@^0.1"}); code != exitOK {
+	if code := a.run([]string{"resolve", "--update", "@specfork/scheduling@^0.1"}); code != exitOK {
 		t.Fatalf("--update: exit %d", code)
 	}
 }
@@ -114,13 +114,13 @@ func TestExitCodes(t *testing.T) {
 
 // CLI-5
 func TestIndexFetch(t *testing.T) {
-	t.Setenv("SPECHUB_INDEX", "")
+	t.Setenv("SPECFORK_INDEX", "")
 	if index.Source() != index.DefaultURL {
 		t.Fatal("default URL")
 	}
 	p := filepath.Join(t.TempDir(), "ix.json")
 	os.WriteFile(p, []byte(`{"generated_at":"x","specs":[{"name":"@a/b","state":"active"}],"unclaimed":[]}`), 0o644)
-	t.Setenv("SPECHUB_INDEX", p)
+	t.Setenv("SPECFORK_INDEX", p)
 	ix, err := index.Load(index.Source())
 	if err != nil || len(ix.Specs) != 1 {
 		t.Fatalf("%v %v", ix, err)

@@ -29,7 +29,7 @@ func TestSearchPartition(t *testing.T) {
 	defer srv.Close()
 	c := New("")
 	c.BaseURL = srv.URL
-	repos, err := c.SearchRepos("topic:spechub")
+	repos, err := c.SearchRepos("topic:specfork")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,13 +74,13 @@ func TestRateLimitPerResource(t *testing.T) {
 	defer srv.Close()
 	c := New("t")
 	c.BaseURL = srv.URL
-	if _, err := c.SearchRepos("topic:spechub"); err != nil {
+	if _, err := c.SearchRepos("topic:specfork"); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := c.RepoByID(1); err != nil {
 		t.Fatalf("core call blocked by the search quota: %v", err)
 	}
-	if _, err := c.SearchRepos("topic:spechub"); !errors.Is(err, ErrRateLimited) {
+	if _, err := c.SearchRepos("topic:specfork"); !errors.Is(err, ErrRateLimited) {
 		t.Fatalf("search quota not honoured: %v", err)
 	}
 }

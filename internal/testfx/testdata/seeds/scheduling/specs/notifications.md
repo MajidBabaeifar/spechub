@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Who hears about what. Emails here; webhook delivery from `@spechub/webhooks`.
+Who hears about what. Emails here; webhook delivery from `@specfork/webhooks`.
 Host side = organizer + other hosts; attendee side = booker + guests.
 
 ## Requirements

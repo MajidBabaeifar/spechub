@@ -11,7 +11,7 @@ All durations are whole minutes.
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| EVT-1 | An event type is owned by exactly one user or one team (`@spechub/teams`) and has `title` (1–200 chars), `slug` (`[a-z0-9-]`, 1–64), `description?`, `length` (1–1440), `hidden` (default false), `position` (display order, ascending, ties by creation). | create with length 0 → rejected |
+| EVT-1 | An event type is owned by exactly one user or one team (`@specfork/teams`) and has `title` (1–200 chars), `slug` (`[a-z0-9-]`, 1–64), `description?`, `length` (1–1440), `hidden` (default false), `position` (display order, ascending, ties by creation). | create with length 0 → rejected |
 | EVT-2 | `slug` is unique per owner. | second event `/intro` for same user → rejected; same slug for another user → ok |
 | EVT-3 | `durations?`: list of allowed lengths that includes `length`; the booker picks one. A slot query or booking with a duration not in the list (or ≠ `length` when no list) is rejected. | durations [15,30]; book 45 min → rejected |
 | EVT-4 | `slot_interval?` (≥ 1): step between slot starts; default = the chosen duration. | length 60, interval 30 → overlapping slots 09:00, 09:30 ([SLT-6](slots.md)) |

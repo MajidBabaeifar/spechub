@@ -1,6 +1,6 @@
 ---
-spechub: 1
-name: "@spechub/auth"
+specfork: 1
+name: "@specfork/auth"
 summary: Email/password, OIDC and magic-link sign-in, TOTP 2FA, password reset, sessions, API keys.
 license: CC-BY-4.0
 derived_from:

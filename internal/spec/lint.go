@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MajidBabaeifar/spechub/internal/semver"
+	"github.com/specfork/specfork/internal/semver"
 )
 
 // Issue is one lint finding. Warnings don't fail lint (CLI-4).
@@ -155,8 +155,8 @@ func Lint(r Repo) []Issue {
 }
 
 func lintFrontMatter(fm FrontMatter, add func(rule, msg string, warn bool)) {
-	if fm.Spechub != 1 {
-		add("FMT-1", "front matter needs `spechub: 1`", false)
+	if fm.Specfork != 1 {
+		add("FMT-1", "front matter needs `specfork: 1`", false)
 	}
 	switch {
 	case fm.Name == "":

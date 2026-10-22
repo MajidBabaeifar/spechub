@@ -73,6 +73,10 @@ func TestSiteCatalogue(t *testing.T) {
 	if !regexp.MustCompile(`data-search="[^"]*@specfork/scheduling[^"]*slots`).MatchString(home) {
 		t.Error("area titles not in search data")
 	}
+	// Filtered-out cards must really disappear: card styles set display, which beats the hidden attribute.
+	if !strings.Contains(read("style.css"), "[hidden]{display:none !important}") {
+		t.Error("hidden cards stay visible")
+	}
 	// Base specs come after the others.
 	if strings.Index(home, `href="/specfork/auth/"`) < strings.Index(home, `href="/specfork/scheduling/"`) {
 		t.Error("base specs should be listed last")

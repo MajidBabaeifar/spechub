@@ -15,8 +15,8 @@ Turn a spec plus everything it requires into one flat bundle an agent can build 
 | CMP-3 | A cycle in `requires` or an unsatisfiable range → error naming the path. | TestCycleError |
 | CMP-4 | `overrides` may target only global IDs of specs in the spec's own transitive `requires`; value `removed` or replacement text. Any other target → error. | TestOverrideTargets |
 | CMP-5 | Two specs overriding the same ID differently → error, unless the root spec overrides it too; the root wins. | TestOverrideConflict |
-| CMP-6 | `spechub.lock` (JSON `{root, specs: {name: {version, sha, repo}}}`) pins every resolved name; resolving the same root with a lock present uses the pinned SHAs; `--update` ignores it. | TestLockfile |
-| CMP-7 | Bundle layout: `spechub-bundle/BUNDLE.md` (order, versions, SHAs, overrides applied, licences, attributions) and one folder per spec, `<scope>/<name>/` with its `README.md` and `specs/`; `BUNDLE.md` lists them in dependency order, root last, and tells the agent to build the root and treat dependencies as part of it. | TestBundleLayoutAndRewrite |
+| CMP-6 | `specfork.lock` (JSON `{root, specs: {name: {version, sha, repo}}}`) pins every resolved name; resolving the same root with a lock present uses the pinned SHAs; `--update` ignores it. | TestLockfile |
+| CMP-7 | Bundle layout: `specfork-bundle/BUNDLE.md` (order, versions, SHAs, overrides applied, licences, attributions) and one folder per spec, `<scope>/<name>/` with its `README.md` and `specs/`; `BUNDLE.md` lists them in dependency order, root last, and tells the agent to build the root and treat dependencies as part of it. | TestBundleLayoutAndRewrite |
 | CMP-8 | In the bundle, every ID is rewritten to its global ID; overridden rows show the new text and `(override by <name>)`; removed rows show `Removed (by <name>)`. | TestBundleLayoutAndRewrite |
 | CMP-9 | In-repo links (`[AUTH-3](auth.md)`) and global ID references ([FMT-9](format.md)) are rewritten to bundle paths. | TestBundleLayoutAndRewrite |
 

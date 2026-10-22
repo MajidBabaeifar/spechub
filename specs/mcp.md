@@ -4,22 +4,23 @@
 
 ## Purpose
 
-Let any agent or app builder find and resolve specs without the CLI.
+Let any agent find and resolve specs through MCP.
 
 ## Requirements
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| MCP-1 | Remote MCP server (streamable HTTP) at `https://mcp.spechub.dev`, no auth. | test_mcp_handshake |
-| MCP-2 | Tools: `search_specs(query, limit≤20)`, `get_spec(name, version?)` → front matter + area list, `resolve_spec(name, range?)` → bundle as one Markdown document with `BUNDLE.md` first. | test_mcp_tools |
-| MCP-3 | Uses the same `index.json` and resolve code as the CLI. | test_shared_core |
-| MCP-4 | Counts calls per tool and per spec name per day; no IPs or personal data stored. | test_usage_counters |
-| MCP-5 | Runs on Cloudflare Workers; counters in D1. | deploy |
+| MCP-1 | `spechub mcp` serves MCP over stdio. Claude Code: `claude mcp add spechub -- spechub mcp`. | test_mcp_handshake |
+| MCP-2 | Tools: `search_specs(query, limit≤20)`, `get_spec(name, version?)` → metadata + area list, `resolve_spec(name, range?)` → bundle as one Markdown document with `BUNDLE.md` first. | test_mcp_tools |
+| MCP-3 | Uses the same index and resolve code as the CLI. | test_shared_core |
+| MCP-4 | Removed: usage counters move out of scope until the server is hosted. | — |
+| MCP-5 | Removed: superseded by MCP-1 (stdio first). | — |
 
 ## Out of scope
 
 - Write tools (publish, claim).
+- Hosted server (`https://mcp.<domain>`) with per-tool, per-spec daily counters and no personal data: needs a domain and a hosting account.
 
 ## Decisions
 
-- Usage counters exist from day one: resolves per week is the number that matters.
+- Stdio first: works today with no hosting; the hosted server reuses the same tools.

@@ -1,0 +1,46 @@
+{{template "head" (dict "Title" "SpecHub" "Root" .Root "Repo" .Repo)}}
+<section class="hero">
+  <h1>App specs agents can build from</h1>
+  <p class="lede">Stack-free specs on GitHub. Pick one, change what you need, and hand the bundle to your coding agent.</p>
+  <pre class="cmd"><code>go install github.com/{{.Repo}}/cmd/spechub@latest
+spechub resolve @spechub/scheduling</code></pre>
+</section>
+<section>
+  <label class="search"><span class="sr">Search specs</span><input id="q" type="search" placeholder="Search specs" autocomplete="off"></label>
+  <ul class="cards" id="specs">
+  {{range .Index.Specs}}
+    <li class="card" data-search="{{lower .Name}} {{lower .Summary}}">
+      <div class="card-head">
+        <a class="name" href="{{page .Name}}">{{.Name}}</a>
+        <span class="ver">{{.Latest}}</span>
+        {{if ne .State "active"}}<span class="badge warn">{{.State}}</span>{{end}}
+      </div>
+      <p>{{.Summary}}</p>
+      <div class="meta">
+        <span>★ {{.Stars}}</span>
+        <span>{{len .Implementations}} implementation{{if ne (len .Implementations) 1}}s{{end}}</span>
+        {{with .Head.Requires}}<span>requires {{range $k, $v := .}}<code>{{$k}}</code> {{end}}</span>{{end}}
+      </div>
+    </li>
+  {{end}}
+  </ul>
+  <p id="none" class="muted" hidden>No spec matches.</p>
+</section>
+{{with .Index.Unclaimed}}
+<section>
+  <h2>Unclaimed</h2>
+  <p class="muted">Repos tagged <code>spechub</code> whose name isn't claimed in the registry yet. They can't be resolved.</p>
+  <ul class="plain">{{range .}}<li><a href="https://github.com/{{.}}">{{.}}</a></li>{{end}}</ul>
+</section>
+{{end}}
+<p class="muted small">Index generated {{.Index.GeneratedAt}}.</p>
+<script>
+const q = document.getElementById('q'), cards = [...document.querySelectorAll('#specs .card')], none = document.getElementById('none');
+q.addEventListener('input', () => {
+  const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+  let shown = 0;
+  for (const c of cards) { const ok = words.every(w => c.dataset.search.includes(w)); c.hidden = !ok; if (ok) shown++; }
+  none.hidden = shown > 0;
+});
+</script>
+{{template "foot"}}

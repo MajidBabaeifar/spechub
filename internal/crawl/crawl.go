@@ -195,7 +195,7 @@ func (c *crawler) spec(r ghapi.Repo) (index.Spec, bool, bool) {
 	c.stats.Read++
 	s := index.Spec{
 		Name: fm.Name, Repo: r.FullName, RepoID: r.ID, OwnerID: r.Owner.ID,
-		Summary: fm.Summary, License: fm.License, Stars: r.Stars, PushedAt: r.PushedAt,
+		Summary: fm.Summary, License: fm.License, Tags: fm.Tags, Stars: r.Stars, PushedAt: r.PushedAt,
 		DerivedFrom: fm.DerivedFrom, Base: fm.Base, HeadSHA: head, Head: snap,
 		Versions: []index.Version{}, Implementations: []index.Impl{},
 	}

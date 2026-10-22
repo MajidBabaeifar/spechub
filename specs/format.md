@@ -11,7 +11,7 @@ What makes a GitHub repo a Specfork spec, and how it describes itself.
 | ID | Requirement | Verified by |
 |---|---|---|
 | FMT-1 | A spec repo has the GitHub topic `specfork` and a root `README.md` whose YAML front matter has `specfork: 1`. | TestFrontMatterSchema, TestUnclaimed |
-| FMT-2 | Front matter fields: `name` (required, `@scope/name`, `[a-z0-9-]`, ≤ 64 chars), `summary` (required, ≤ 200 chars), `license` (required, SPDX id), `requires` (map name → range), `base` (`{spec: name@version, relation: fork\|extends}`), `derived_from` (`{repo, commit, url, license}`), `overrides` (map global ID → `removed` or replacement text). Unknown fields → lint warning. | TestFrontMatterSchema, TestLintAreas |
+| FMT-2 | Front matter fields: `name` (required, `@scope/name`, `[a-z0-9-]`, ≤ 64 chars), `summary` (required, ≤ 200 chars), `license` (required, SPDX id), `requires` (map name → range), `base` (`{spec: name@version, relation: fork\|extends}`), `derived_from` (`{repo, commit, url, license}`), `overrides` (map global ID → `removed` or replacement text), `tags` (≤ 5, each `[a-z0-9-]`, ≤ 24 chars; e.g. `saas`, `personal`, `desktop`, `base`). Unknown fields → lint warning. | TestFrontMatterSchema, TestLintAreas |
 | FMT-3 | Requirements live in `specs/*.md`, one area per file, each with `**Status:**`, `**Prefix:**`, and a table `ID \| Requirement \| Verified by`. | TestLintAreas |
 | FMT-4 | IDs are `PREFIX-n`; prefixes unique within a repo; IDs unique within a repo; never reused; a dropped row says `Removed`. | TestLintAreas |
 | FMT-5 | `Verified by` is a stack-free acceptance check: inputs → expected outcome, a scenario name, or `manual: <what to look at>`. Never empty. | TestLintAreas, TestLintVerifiedByRequired |

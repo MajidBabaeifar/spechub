@@ -1,0 +1,39 @@
+# Site
+
+**Status:** Draft · **Prefix:** WEB
+
+## Purpose
+
+https://specfork.dev: find a spec, read it, and build it with your agent. Static pages generated from `index.json` and the specs at their indexed commits.
+
+## Requirements
+
+| ID | Requirement | Verified by |
+|---|---|---|
+| WEB-1 | Pages: `/` (home), `/<scope>/<name>/` per indexed spec (scope without `@`), `/docs/`, `/docs/publish/`, `/docs/claim/`, `/404.html`, plus `/index.json`, `/sitemap.xml`, `/robots.txt`, `/llms.txt`. | TestSitePages |
+| WEB-2 | Home intro: "Recipes for software", one paragraph on what Specfork is, three steps (pick a recipe, fork and adjust, build with your agent) and links to the catalogue, `/docs/` and `/docs/publish/`. | TestSitePages |
+| WEB-3 | Catalogue: a card per spec with name, summary, tags, latest version, requirement count at that version, licence and implementation count; frozen specs are marked; base specs (tag `base`) listed after the others. | TestSiteCatalogue |
+| WEB-4 | Filters: a chip per tag with its spec count, and a search box matching every word against name, summary, tags and area titles; `?q=` and `?tag=` prefill both and stay in the URL. Without JavaScript every card is shown. | TestSiteCatalogue; manual: filter in a browser |
+| WEB-5 | Spec page header: name, summary, tags, latest version, licence, repo, source credit (`derived_from`), and a "Build it" box with `specfork resolve <name>` and the MCP setup line, each with a copy button. | TestSpecPage |
+| WEB-6 | Spec content: the README body and every area at the latest version (head if untagged), areas in file order, each area an anchored section; every requirement row has the anchor `#<ID>`; in-spec links go to those anchors; global ID references link to the other spec's page and anchor when it is indexed. | TestSpecContent |
+| WEB-7 | Content is shown only when the spec's licence is one of `CC-BY-4.0`, `CC-BY-SA-4.0`, `CC0-1.0`, `MIT`, `Apache-2.0`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `MPL-2.0`, `Unlicense`; otherwise the page links to the repo. Shown content carries "From <repo> at <commit>, licence <id>." | TestSpecContent |
+| WEB-8 | Rendering is safe: raw HTML in specs is escaped; `javascript:`, `vbscript:` and `data:` links are dropped; external links get `rel="nofollow ugc noopener"`. | TestRenderSafety |
+| WEB-9 | Bundle panel: the specs `specfork resolve` would bundle for the latest version, each with version and requirement count, and the total. | TestSpecPage |
+| WEB-10 | Spec page also lists required-by, implementations (repo, stack, live URL) and the version history. | TestSpecPage |
+| WEB-11 | Docs pages are rendered from `docs/*.md` in this repo. | TestSitePages |
+| WEB-12 | Every page has a unique `<title>` and meta description (≤ 160 chars), a canonical URL on `https://specfork.dev`, Open Graph and Twitter card tags, and the 1200×630 share image `/og.png`. | TestSEO |
+| WEB-13 | JSON-LD: the home page has `WebSite` with a `SearchAction` on `/?q={search_term_string}`; each spec page has `CreativeWork` with name, description, version, license, url, author and `isBasedOn` (derived_from). | TestSEO |
+| WEB-14 | `sitemap.xml` lists home, docs and every spec page, with `lastmod` from the spec's `pushed_at`; `robots.txt` allows all and names the sitemap. | TestSEO |
+| WEB-15 | `llms.txt`: what Specfork is, how to use it (CLI, MCP, `index.json`), and one line per spec with its page URL and summary. | TestSEO |
+| WEB-16 | No third-party scripts, fonts, trackers or cookies; usable at 360 px; light and dark themes. | manual: network tab, phone width |
+
+## Out of scope
+
+- Usage numbers on pages: shown only once the hosted layer provides real data; no empty counters.
+- Accounts, stars or comments on the site.
+
+## Decisions
+
+- Static pages: fast, cacheable, best for search; the hosted layer adds dynamic parts later.
+- Spec content is rendered at build time from the indexed commit, credited, licence-permitting; it is a view, not a stored mirror.
+- `/<scope>/<name>/` mirrors the spec name, like package registries.

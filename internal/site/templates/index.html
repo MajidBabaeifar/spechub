@@ -1,9 +1,9 @@
-{{template "head" (dict "Title" "SpecHub" "Root" .Root "Repo" .Repo)}}
+{{template "head" (dict "Title" "Specfork" "Root" .Root "Repo" .Repo)}}
 <section class="hero">
-  <h1>App specs agents can build from</h1>
-  <p class="lede">Stack-free specs on GitHub. Pick one, change what you need, and hand the bundle to your coding agent.</p>
-  <pre class="cmd"><code>go install github.com/{{.Repo}}/cmd/spechub@latest
-spechub resolve @spechub/scheduling</code></pre>
+  <h1>Recipes for software</h1>
+  <p class="lede">Stack-free app specs on GitHub. Fork one, change what you need, and hand it to your coding agent to build.</p>
+  <pre class="cmd"><code>go install github.com/{{.Repo}}/cmd/specfork@latest
+specfork resolve @specfork/scheduling</code></pre>
 </section>
 <section>
   <label class="search"><span class="sr">Search specs</span><input id="q" type="search" placeholder="Search specs" autocomplete="off"></label>
@@ -29,7 +29,7 @@ spechub resolve @spechub/scheduling</code></pre>
 {{with .Index.Unclaimed}}
 <section>
   <h2>Unclaimed</h2>
-  <p class="muted">Repos tagged <code>spechub</code> whose name isn't claimed in the registry yet. They can't be resolved.</p>
+  <p class="muted">Repos tagged <code>specfork</code> whose name isn't claimed in the registry yet. They can't be resolved.</p>
   <ul class="plain">{{range .}}<li><a href="https://github.com/{{.}}">{{.}}</a></li>{{end}}</ul>
 </section>
 {{end}}

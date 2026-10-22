@@ -1,4 +1,4 @@
-{{template "head" (dict "Title" (print .Spec.Name " · SpecHub") "Root" .Root "Repo" .Repo)}}
+{{template "head" (dict "Title" (print .Spec.Name " · Specfork") "Root" .Root "Repo" .Repo)}}
 <p class="crumbs"><a href="{{.Root}}./">All specs</a></p>
 <h1 class="spec-title">{{.Spec.Name}} {{if ne .Spec.State "active"}}<span class="badge warn">{{.Spec.State}}</span>{{end}}</h1>
 <p class="lede">{{.Spec.Summary}}</p>
@@ -10,8 +10,8 @@
 </div>
 
 <h2>Use it</h2>
-<pre class="cmd"><code>spechub resolve {{.Spec.Name}}</code></pre>
-<p class="muted">Writes <code>spechub-bundle/</code> with this spec and everything it requires. In Claude Code, <code>claude mcp add spechub -- spechub mcp</code> lets the agent call <code>resolve_spec</code> itself.</p>
+<pre class="cmd"><code>specfork resolve {{.Spec.Name}}</code></pre>
+<p class="muted">Writes <code>specfork-bundle/</code> with this spec and everything it requires. In Claude Code, <code>claude mcp add specfork -- specfork mcp</code> lets the agent call <code>resolve_spec</code> itself.</p>
 
 <div class="cols">
 <section>
@@ -29,7 +29,7 @@
 <table><thead><tr><th>Repo</th><th>Stack</th><th>Spec version</th><th>Live</th></tr></thead><tbody>
 {{range .}}<tr><td><a href="https://github.com/{{.Repo}}">{{.Repo}}</a></td><td>{{join .Stack ", "}}</td><td>{{.Version}}</td><td>{{if .URL}}<a href="{{.URL}}">{{.URL}}</a>{{else}}<span class="muted">–</span>{{end}}</td></tr>{{end}}
 </tbody></table>
-{{else}}<p class="muted">None yet. Build it and tag your repo <code>spechub-impl</code> with <code>implements: {{.Spec.Name}}@{{.Spec.Latest}}</code> in its README front matter.</p>{{end}}
+{{else}}<p class="muted">None yet. Build it and tag your repo <code>specfork-impl</code> with <code>implements: {{.Spec.Name}}@{{.Spec.Latest}}</code> in its README front matter.</p>{{end}}
 
 <h2>Areas</h2>
 <ul class="plain areas">{{range .Snap.Files}}<li><a href="https://github.com/{{$.Spec.Repo}}/blob/{{$.SnapSHA}}/{{.}}">{{base .}}</a></li>{{end}}</ul>

@@ -77,6 +77,9 @@ func TestSiteCatalogue(t *testing.T) {
 	if !strings.Contains(read("style.css"), "[hidden]{display:none !important}") {
 		t.Error("hidden cards stay visible")
 	}
+	if !regexp.MustCompile(`href="/style\.css\?v=[0-9a-f]{8}"`).MatchString(home) || !regexp.MustCompile(`src="/app\.js\?v=[0-9a-f]{8}"`).MatchString(home) {
+		t.Error("assets not fingerprinted")
+	}
 	// Base specs come after the others.
 	if strings.Index(home, `href="/specfork/auth/"`) < strings.Index(home, `href="/specfork/scheduling/"`) {
 		t.Error("base specs should be listed last")

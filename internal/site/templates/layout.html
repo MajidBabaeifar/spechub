@@ -20,7 +20,7 @@
 <meta name="twitter:image" content="https://specfork.dev/og.png">
 <meta name="theme-color" content="#2f5d50">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f5d50'/%3E%3Cpath d='M10 8v16M10 8h12M10 16h9' stroke='white' stroke-width='3.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="{{asset "style.css"}}">
 {{with .Head.JSONLD}}<script type="application/ld+json">{{json .}}</script>{{end}}
 </head>
 <body>
@@ -36,6 +36,6 @@
   <p><strong>Specfork</strong>: recipes for software. Specs live in their own GitHub repos under their own licences; Specfork indexes them and shows them with credit.</p>
   <p><a href="/docs/">Docs</a> · <a href="/docs/feedback/">Feedback</a> · <a href="/index.json">index.json</a> · <a href="/llms.txt">llms.txt</a> · <a href="https://github.com/{{.Repo}}">Source</a></p>
 </div></footer>
-<script src="/app.js" defer></script>
+<script src="{{asset "app.js"}}" defer></script>
 </body>
 </html>{{end}}

@@ -3,7 +3,9 @@
 package site
 
 import (
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -49,7 +51,8 @@ var tmpl = template.Must(template.New("").Funcs(template.FuncMap{
 		}
 		return s
 	},
-	"page": pagePath,
+	"page":  pagePath,
+	"asset": assetURL,
 	"join": strings.Join,
 	"base": filepath.Base,
 	"safe": func(s string) template.HTML { return template.HTML(s) },
@@ -58,6 +61,16 @@ var tmpl = template.Must(template.New("").Funcs(template.FuncMap{
 		return template.JS(b)
 	},
 }).ParseFS(files, "templates/*.html"))
+
+// assetURL adds a content fingerprint so browsers fetch new CSS and JS after a deploy.
+func assetURL(name string) string {
+	data, err := files.ReadFile("templates/" + name)
+	if err != nil {
+		return "/" + name
+	}
+	sum := sha256.Sum256(data)
+	return "/" + name + "?v=" + hex.EncodeToString(sum[:4])
+}
 
 // pagePath is a spec's site path: "@specfork/scheduling" → "/specfork/scheduling/" (WEB-1).
 func pagePath(name string) string { return "/" + resolve.Dir(name) + "/" }

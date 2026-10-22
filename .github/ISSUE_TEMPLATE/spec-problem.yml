@@ -1,0 +1,24 @@
+name: Problem with a spec
+description: A requirement is wrong, unclear, missing, or contradicts another.
+labels: [spec-problem]
+title: "Spec problem: "
+body:
+  - type: input
+    id: spec
+    attributes:
+      label: Spec
+      placeholder: "@specfork/scheduling"
+    validations:
+      required: true
+  - type: input
+    id: requirement
+    attributes:
+      label: Requirement ID (optional)
+      placeholder: SLT-4
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong?
+      description: What the spec says, what you expected, and (if you built it) what happened.
+    validations:
+      required: true

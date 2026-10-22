@@ -1,0 +1,25 @@
+name: Request a spec
+description: Ask for a spec of an app or tool that isn't on Specfork yet.
+labels: [spec-request]
+title: "Spec request: "
+body:
+  - type: input
+    id: app
+    attributes:
+      label: App or tool
+      placeholder: e.g. an invoicing app, a markdown notes app, an image resizer
+    validations:
+      required: true
+  - type: textarea
+    id: needs
+    attributes:
+      label: What should it do?
+      description: The main things you'd build it for. A few bullet points are enough.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: An open-source app that does this (optional)
+      description: Specfork extracts specs from open-source apps; a link helps.
+      placeholder: https://github.com/…

@@ -1,3 +1,5 @@
 .sources/
-node_modules/
 spechub-bundle/
+seeds/
+_site/
+spechub.lock

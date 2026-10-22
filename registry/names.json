@@ -1,3 +1,32 @@
 {
-  "names": {}
+  "names": {
+    "@spechub/auth": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 88742101,
+      "repo": "MajidBabaeifar/spechub-auth",
+      "repo_id": 1429077818,
+      "state": "active"
+    },
+    "@spechub/scheduling": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 88742101,
+      "repo": "MajidBabaeifar/spechub-scheduling",
+      "repo_id": 1429078149,
+      "state": "active"
+    },
+    "@spechub/teams": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 88742101,
+      "repo": "MajidBabaeifar/spechub-teams",
+      "repo_id": 1429077938,
+      "state": "active"
+    },
+    "@spechub/webhooks": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 88742101,
+      "repo": "MajidBabaeifar/spechub-webhooks",
+      "repo_id": 1429078037,
+      "state": "active"
+    }
+  }
 }

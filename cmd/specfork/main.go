@@ -314,6 +314,7 @@ func (a *app) crawl(args []string) error {
 	names := fs.String("names", "registry/names.json", "")
 	out := fs.String("out", "_site", "")
 	prevURL := fs.String("prev", index.DefaultURL, "")
+	docs := fs.String("docs", "docs", "")
 	if _, err := parse(fs, args); err != nil {
 		return err
 	}
@@ -339,7 +340,7 @@ func (a *app) crawl(args []string) error {
 	}
 	fmt.Fprintf(a.stderr, "specs %d, unclaimed %d, read %d, reused %d, skipped %d, API calls %d, rate limited %v\n",
 		len(ix.Specs), len(ix.Unclaimed), st.Read, st.Reused, st.Skipped, gh.Calls, st.RateLimited)
-	return site.Generate(ix, *out)
+	return site.Generate(ix, *out, site.Options{Fetcher: source.GitHub{}, DocsDir: *docs, Warn: func(s string) { fmt.Fprintln(a.stderr, "warning:", s) }})
 }
 
 // claimCheck is run by the claim workflow on a registry PR (REG-2).

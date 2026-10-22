@@ -1,0 +1,6 @@
+{{template "top" .}}
+<div class="doc">
+  <nav class="doc-nav" aria-label="Docs"><ul class="plain">{{range .Docs}}<li><a href="{{.Path}}"{{if eq .Path $.Path}} aria-current="page"{{end}}>{{.Title}}</a></li>{{end}}</ul></nav>
+  <article class="prose doc-body">{{.HTML}}</article>
+</div>
+{{template "bottom" .}}

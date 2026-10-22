@@ -29,6 +29,9 @@ type Names struct {
 // ReservedScope is claimable only by maintainers (REG-3).
 const ReservedScope = "@specfork"
 
+// siteScopes would clash with specfork.dev paths (REG-3, WEB-1).
+var siteScopes = map[string]bool{"@docs": true, "@r": true, "@api": true, "@assets": true, "@s": true}
+
 func Parse(b []byte) (*Names, error) {
 	var n Names
 	if err := json.Unmarshal(b, &n); err != nil {
@@ -134,6 +137,9 @@ func CheckClaim(base, head *Names, author string, gh GitHub) Verdict {
 		}
 		if e.State != "active" {
 			bad("new claims start `active`")
+		}
+		if siteScopes[Scope(name)] {
+			bad("scope %s clashes with a site path", Scope(name))
 		}
 		if Scope(name) == ReservedScope {
 			v.Manual = true

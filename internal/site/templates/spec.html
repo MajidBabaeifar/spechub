@@ -1,45 +1,67 @@
-{{template "head" (dict "Title" (print .Spec.Name " · Specfork") "Root" .Root "Repo" .Repo)}}
-<p class="crumbs"><a href="{{.Root}}./">All specs</a></p>
-<h1 class="spec-title">{{.Spec.Name}} {{if ne .Spec.State "active"}}<span class="badge warn">{{.Spec.State}}</span>{{end}}</h1>
-<p class="lede">{{.Spec.Summary}}</p>
-<div class="meta big">
-  <span>Latest <strong>{{.Spec.Latest}}</strong></span>
-  <span>Licence <strong>{{.Spec.License}}</strong></span>
-  <span>★ {{.Spec.Stars}}</span>
-  <a href="https://github.com/{{.Spec.Repo}}">{{.Spec.Repo}}</a>
+{{template "top" .}}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Specs</a> / <span>{{.Spec.Name}}</span></nav>
+<div class="spec">
+<article class="spec-main">
+  <header class="spec-head">
+    <h1>{{.Spec.Name}} {{if ne .Spec.State "active"}}<span class="badge warn">{{.Spec.State}}</span>{{end}}</h1>
+    <p class="lede">{{.Spec.Summary}}</p>
+    <div class="meta big">
+      {{range .Spec.Tags}}<a class="tag" href="/?tag={{.}}#specs">{{.}}</a>{{end}}
+      <span>Version <strong>{{.Content.Version}}</strong></span>
+      {{if .Content.Requirements}}<span><strong>{{.Content.Requirements}}</strong> requirements</span>{{end}}
+      <span>Licence <strong>{{.Spec.License}}</strong></span>
+      <a href="https://github.com/{{.Spec.Repo}}">{{.Spec.Repo}}</a>
+    </div>
+  </header>
+
+  {{if .Content.Shown}}
+    {{with .Content.Areas}}
+    <nav class="toc" aria-label="Areas"><strong>Areas</strong>
+      <ol>{{range .}}<li><a href="#{{.Anchor}}">{{.Title}}</a> <span class="muted">{{.Requirements}}</span></li>{{end}}</ol>
+    </nav>
+    {{end}}
+    <section class="prose readme">{{safe .Content.ReadmeHTML}}</section>
+    {{range .Content.Areas}}
+    <section class="prose area" id="{{.Anchor}}">{{safe .HTML}}</section>
+    {{end}}
+    <p class="muted small credit">From <a href="https://github.com/{{.Spec.Repo}}/tree/{{.Content.SHA}}">{{.Spec.Repo}}</a> at <code>{{short .Content.SHA}}</code>, licence {{.Spec.License}}.</p>
+  {{else}}
+    <p class="notice">The text of this spec is on <a href="https://github.com/{{.Spec.Repo}}">GitHub</a>{{if .Content.Requirements}} ({{.Content.Requirements}} requirements){{end}}.</p>
+  {{end}}
+</article>
+
+<aside class="spec-side">
+  <section class="box">
+    <h2>Build it</h2>
+    <p class="small">Write the bundle for your agent:</p>
+    <div class="cmd"><code>specfork resolve {{.Spec.Name}}</code><button type="button" class="copy" data-copy="specfork resolve {{.Spec.Name}}">Copy</button></div>
+    <p class="small">Or let the agent fetch it over MCP:</p>
+    <div class="cmd"><code>claude mcp add specfork -- specfork mcp</code><button type="button" class="copy" data-copy="claude mcp add specfork -- specfork mcp">Copy</button></div>
+    <p class="small"><a href="/docs/">Install and setup</a></p>
+  </section>
+
+  <section class="box">
+    <h2>In the bundle</h2>
+    {{if .BundleErr}}<p class="small muted">{{.BundleErr}}</p>{{else}}
+    <ul class="plain bundle">{{range .Bundle}}<li><a href="{{page .Name}}">{{.Name}}</a> <span class="muted">{{.Version}}{{if .Requirements}} · {{.Requirements}}{{end}}</span></li>{{end}}</ul>
+    {{if .BundleSum}}<p class="small"><strong>{{.BundleSum}}</strong> requirements in total</p>{{end}}{{end}}
+  </section>
+
+  {{with .RequiredBy}}<section class="box"><h2>Required by</h2><ul class="plain">{{range .}}<li><a href="{{page .}}">{{.}}</a></li>{{end}}</ul></section>{{end}}
+
+  <section class="box">
+    <h2>Implementations</h2>
+    {{with .Spec.Implementations}}<ul class="plain">{{range .}}<li><a href="https://github.com/{{.Repo}}" rel="nofollow ugc noopener">{{.Repo}}</a><br><span class="small muted">{{join .Stack ", "}}{{if .Version}} · spec {{.Version}}{{end}}</span>{{if .URL}} · <a href="{{.URL}}" rel="nofollow ugc noopener">live</a>{{end}}</li>{{end}}</ul>
+    {{else}}<p class="small muted">None yet. Built one? Tag the repo <code>specfork-impl</code> and add <code>implements: {{.Spec.Name}}@{{.Content.Version}}</code> to its README front matter.</p>{{end}}
+  </section>
+
+  {{with .Spec.DerivedFrom}}<section class="box"><h2>Source</h2><p class="small">Derived from <a href="{{.Repo}}" rel="nofollow noopener">{{.Repo}}</a>{{if .License}} ({{.License}}){{end}}. Behaviour described in new words; no code copied.</p></section>{{end}}
+
+  <section class="box">
+    <h2>Versions</h2>
+    <ul class="plain small">{{range .Spec.Versions}}<li>{{.Version}} · <a href="https://github.com/{{$.Spec.Repo}}/tree/{{.SHA}}"><code>{{short .SHA}}</code></a></li>{{end}}
+    <li>head · <a href="https://github.com/{{.Spec.Repo}}/tree/{{.Spec.HeadSHA}}"><code>{{short .Spec.HeadSHA}}</code></a></li></ul>
+  </section>
+</aside>
 </div>
-
-<h2>Use it</h2>
-<pre class="cmd"><code>specfork resolve {{.Spec.Name}}</code></pre>
-<p class="muted">Writes <code>specfork-bundle/</code> with this spec and everything it requires. In Claude Code, <code>claude mcp add specfork -- specfork mcp</code> lets the agent call <code>resolve_spec</code> itself.</p>
-
-<div class="cols">
-<section>
-  <h2>Requires</h2>
-  {{with .Snap.Requires}}<ul class="plain">{{range $k, $v := .}}<li>{{if index $.Known $k}}<a href="{{$.Root}}{{page $k}}">{{$k}}</a>{{else}}{{$k}}{{end}} <span class="muted">{{$v}}</span></li>{{end}}</ul>{{else}}<p class="muted">Nothing.</p>{{end}}
-</section>
-<section>
-  <h2>Required by</h2>
-  {{with .RequiredBy}}<ul class="plain">{{range .}}<li><a href="{{$.Root}}{{page .}}">{{.}}</a></li>{{end}}</ul>{{else}}<p class="muted">Nothing yet.</p>{{end}}
-</section>
-</div>
-
-<h2>Implementations</h2>
-{{with .Spec.Implementations}}
-<table><thead><tr><th>Repo</th><th>Stack</th><th>Spec version</th><th>Live</th></tr></thead><tbody>
-{{range .}}<tr><td><a href="https://github.com/{{.Repo}}">{{.Repo}}</a></td><td>{{join .Stack ", "}}</td><td>{{.Version}}</td><td>{{if .URL}}<a href="{{.URL}}">{{.URL}}</a>{{else}}<span class="muted">–</span>{{end}}</td></tr>{{end}}
-</tbody></table>
-{{else}}<p class="muted">None yet. Build it and tag your repo <code>specfork-impl</code> with <code>implements: {{.Spec.Name}}@{{.Spec.Latest}}</code> in its README front matter.</p>{{end}}
-
-<h2>Areas</h2>
-<ul class="plain areas">{{range .Snap.Files}}<li><a href="https://github.com/{{$.Spec.Repo}}/blob/{{$.SnapSHA}}/{{.}}">{{base .}}</a></li>{{end}}</ul>
-
-<h2>Versions</h2>
-<table><thead><tr><th>Version</th><th>Commit</th><th>Areas</th></tr></thead><tbody>
-{{range .Spec.Versions}}<tr><td>{{.Version}}</td><td><a href="https://github.com/{{$.Spec.Repo}}/tree/{{.SHA}}"><code>{{short .SHA}}</code></a></td><td>{{len .Files}}</td></tr>{{end}}
-<tr><td>head</td><td><a href="https://github.com/{{.Spec.Repo}}/tree/{{.Spec.HeadSHA}}"><code>{{short .Spec.HeadSHA}}</code></a></td><td>{{len .Spec.Head.Files}}</td></tr>
-</tbody></table>
-
-{{with .Spec.DerivedFrom}}<h2>Derived from</h2>
-<p><a href="{{.Repo}}">{{.Repo}}</a>{{if .License}} ({{.License}}){{end}}{{if .Commit}} at <code>{{short .Commit}}</code>{{end}}. Behaviour described in new words; no code copied.</p>{{end}}
-{{template "foot"}}
+{{template "bottom" .}}

@@ -4,58 +4,167 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/testfx"
 )
 
-// IDX-9
-func TestSitePages(t *testing.T) {
-	ix := &index.Index{GeneratedAt: "2026-10-22T12:00:00Z", Unclaimed: []string{"eve/thing"}, Specs: []index.Spec{
-		{Name: "@specfork/auth", Repo: "o/specfork-auth", State: "active", Summary: "Sign-in <script>", License: "CC-BY-4.0", HeadSHA: "abcdef1234",
-			Head:     index.Snapshot{Files: []string{"specs/auth.md"}},
-			Versions: []index.Version{{Version: "0.1.0", SHA: "1111111222", Snapshot: index.Snapshot{Files: []string{"specs/auth.md"}}}}},
-		{Name: "@specfork/scheduling", Repo: "o/specfork-scheduling", State: "active", Summary: "Booking", License: "CC-BY-4.0", HeadSHA: "ffff",
-			Versions:        []index.Version{{Version: "0.1.0", SHA: "2222", Snapshot: index.Snapshot{Requires: map[string]string{"@specfork/auth": "^0.1"}, Files: []string{"specs/slots.md"}}}},
-			Implementations: []index.Impl{{Repo: "o/scheduling-rebuild", Stack: []string{"go", "sqlite"}, Version: "0.1.0"}}},
-	}}
+func build(t *testing.T, mutate func(*index.Index)) (string, func(string) string) {
+	t.Helper()
+	ix, fetch := testfx.Seeds(t)
+	for i := range ix.Specs {
+		switch ix.Specs[i].Name {
+		case "@specfork/auth", "@specfork/teams", "@specfork/webhooks":
+			ix.Specs[i].Tags = []string{"base"}
+		case "@specfork/scheduling":
+			ix.Specs[i].Tags = []string{"saas", "calendar"}
+			ix.Specs[i].Implementations = []index.Impl{{Repo: "someone/scheduling-go", Stack: []string{"go"}, Version: "0.1.0", URL: "https://example.com"}}
+			ix.Specs[i].PushedAt = "2026-10-20T10:00:00Z"
+		}
+	}
+	if mutate != nil {
+		mutate(ix)
+	}
 	dir := t.TempDir()
-	if err := Generate(ix, dir); err != nil {
+	if err := Generate(ix, dir, Options{Fetcher: fetch, DocsDir: "../../docs"}); err != nil {
 		t.Fatal(err)
 	}
-	read := func(p string) string {
+	return dir, func(p string) string {
 		b, err := os.ReadFile(filepath.Join(dir, p))
 		if err != nil {
 			t.Fatal(err)
 		}
 		return string(b)
 	}
+}
+
+func must(t *testing.T, page, label string, wants ...string) {
+	t.Helper()
+	for _, w := range wants {
+		if !strings.Contains(page, w) {
+			t.Errorf("%s missing %q", label, w)
+		}
+	}
+}
+
+// WEB-1, WEB-2, WEB-11
+func TestSitePages(t *testing.T) {
+	_, read := build(t, nil)
+	for _, p := range []string{"index.html", "specfork/scheduling/index.html", "specfork/auth/index.html", "docs/index.html", "docs/publish/index.html", "docs/claim/index.html", "404.html", "index.json", "sitemap.xml", "robots.txt", "llms.txt", "og.png", "style.css", "app.js", ".nojekyll"} {
+		read(p)
+	}
+	must(t, read("index.html"), "home", "Recipes for software", "Pick a recipe", "Fork and adjust", "Build with your agent", `href="/docs/"`, `href="/docs/publish/"`, `href="#specs"`)
+	docs := read("docs/index.html")
+	must(t, docs, "docs", "<h1", "Use Specfork with your agent", `href="/docs/publish/"`, `aria-current="page"`, `href="/#specs"`)
+	if strings.Contains(docs, "blob/main/docs/publish.md") {
+		t.Error("doc links not rewritten to site paths")
+	}
+}
+
+// WEB-3, WEB-4
+func TestSiteCatalogue(t *testing.T) {
+	_, read := build(t, nil)
 	home := read("index.html")
-	for _, want := range []string{`href="s/specfork/scheduling/"`, "Sign-in &lt;script&gt;", "eve/thing", "1 implementation<", `href="style.css"`} {
-		if !strings.Contains(home, want) {
-			t.Errorf("index.html missing %q", want)
+	must(t, home, "home", `data-tag="base"`, `base <span>3</span>`, `href="/specfork/scheduling/"`, "requirements</span>", `<span class="tag">calendar</span>`, `id="q"`)
+	// Area titles are searchable.
+	if !regexp.MustCompile(`data-search="[^"]*@specfork/scheduling[^"]*slots`).MatchString(home) {
+		t.Error("area titles not in search data")
+	}
+	// Base specs come after the others.
+	if strings.Index(home, `href="/specfork/auth/"`) < strings.Index(home, `href="/specfork/scheduling/"`) {
+		t.Error("base specs should be listed last")
+	}
+}
+
+// WEB-5, WEB-9, WEB-10
+func TestSpecPage(t *testing.T) {
+	_, read := build(t, nil)
+	p := read("specfork/scheduling/index.html")
+	must(t, p, "scheduling", "specfork resolve @specfork/scheduling", "claude mcp add specfork -- specfork mcp", `class="copy"`,
+		`href="/specfork/auth/"`, `href="/specfork/teams/"`, `href="/specfork/webhooks/"`, "requirements in total",
+		"someone/scheduling-go", "https://example.com", "github.com/calcom/cal.com", "0.1.0 · ")
+	must(t, read("specfork/auth/index.html"), "auth", "Required by", `href="/specfork/scheduling/"`)
+}
+
+// WEB-6, WEB-7
+func TestSpecContent(t *testing.T) {
+	_, read := build(t, nil)
+	p := read("specfork/scheduling/index.html")
+	must(t, p, "content",
+		`id="area-slots"`, `<tr id="SLT-4">`, `href="#area-slots"`,
+		`href="/specfork/teams/#TEAM-10"`,
+		"From <a href=\"https://github.com/specfork/scheduling/tree/v0.1.0-sha\">")
+	if strings.Contains(p, "../../teams") {
+		t.Error("cross-repo relative link leaked")
+	}
+	_, read2 := build(t, func(ix *index.Index) {
+		for i := range ix.Specs {
+			if ix.Specs[i].Name == "@specfork/scheduling" {
+				ix.Specs[i].License = "LicenseRef-Proprietary"
+			}
+		}
+	})
+	closed := read2("specfork/scheduling/index.html")
+	if strings.Contains(closed, `<tr id="SLT-4">`) || !strings.Contains(closed, "The text of this spec is on") {
+		t.Error("non-open licence must not show content")
+	}
+}
+
+// WEB-8
+func TestRenderSafety(t *testing.T) {
+	l := &linker{file: "specs/a.md", ids: map[string]string{}, areaAnchor: map[string]string{}, pageOf: func(string) string { return "" }, blob: "https://github.com/o/r/blob/sha/"}
+	html, err := l.render([]byte("<script>alert(1)</script>\n\n[x](javascript:alert(1)) [y](https://example.com) [z](vbscript:msgbox) ![i](data:text/html,hi)\n"), 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, bad := range []string{"<script>", "javascript:", "vbscript:", "data:text/html"} {
+		if strings.Contains(html, bad) {
+			t.Errorf("unsafe %q rendered: %s", bad, html)
 		}
 	}
-	page := read("s/specfork/scheduling/index.html")
-	for _, want := range []string{
-		"specfork resolve @specfork/scheduling",
-		`href="../../../s/specfork/auth/"`,
-		"https://github.com/o/scheduling-rebuild",
-		"go, sqlite",
-		"https://github.com/o/specfork-scheduling/blob/2222/specs/slots.md",
-		`href="../../../style.css"`,
-	} {
-		if !strings.Contains(page, want) {
-			t.Errorf("scheduling page missing %q", want)
+	if !strings.Contains(html, `rel="nofollow ugc noopener"`) {
+		t.Errorf("external link without rel: %s", html)
+	}
+}
+
+// WEB-12, WEB-13, WEB-14, WEB-15
+func TestSEO(t *testing.T) {
+	dir, read := build(t, nil)
+	titles := map[string]string{}
+	re := regexp.MustCompile(`<title>([^<]+)</title>`)
+	filepath.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if strings.HasSuffix(p, ".html") {
+			b, _ := os.ReadFile(p)
+			m := re.FindSubmatch(b)
+			if m == nil {
+				t.Errorf("%s has no title", p)
+				return nil
+			}
+			if other, dup := titles[string(m[1])]; dup {
+				t.Errorf("duplicate title %q in %s and %s", m[1], p, other)
+			}
+			titles[string(m[1])] = p
+			for _, w := range []string{`<meta name="description"`, `<link rel="canonical" href="https://specfork.dev/`, `og:image" content="https://specfork.dev/og.png"`, `twitter:card`} {
+				if !strings.Contains(string(b), w) {
+					t.Errorf("%s missing %s", p, w)
+				}
+			}
 		}
+		return nil
+	})
+	ld := regexp.MustCompile(`(?s)<script type="application/ld\+json">(.*?)</script>`)
+	var home map[string]any
+	if m := ld.FindStringSubmatch(read("index.html")); m == nil || json.Unmarshal([]byte(m[1]), &home) != nil || home["@type"] != "WebSite" || home["potentialAction"] == nil {
+		t.Errorf("home JSON-LD: %v", home)
 	}
-	if auth := read("s/specfork/auth/index.html"); !strings.Contains(auth, `href="../../../s/specfork/scheduling/"`) {
-		t.Error("auth page lacks required-by link")
+	var sp map[string]any
+	if m := ld.FindStringSubmatch(read("specfork/scheduling/index.html")); m == nil || json.Unmarshal([]byte(m[1]), &sp) != nil || sp["@type"] != "CreativeWork" || sp["version"] != "0.1.0" || sp["isBasedOn"] == nil {
+		t.Errorf("spec JSON-LD: %v", sp)
 	}
-	var back index.Index
-	if err := json.Unmarshal([]byte(read("index.json")), &back); err != nil || len(back.Specs) != 2 {
-		t.Fatalf("index.json: %v", err)
-	}
-	read(".nojekyll")
+	must(t, read("sitemap.xml"), "sitemap", "<loc>https://specfork.dev/specfork/scheduling/</loc><lastmod>2026-10-20</lastmod>", "<loc>https://specfork.dev/docs/claim/</loc>")
+	must(t, read("robots.txt"), "robots", "Sitemap: https://specfork.dev/sitemap.xml")
+	must(t, read("llms.txt"), "llms", "# Specfork", "specfork resolve", "[@specfork/scheduling](https://specfork.dev/specfork/scheduling/)")
 }

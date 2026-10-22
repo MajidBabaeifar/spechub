@@ -53,6 +53,7 @@ type Spec struct {
 	State           string            `json:"state"`
 	Summary         string            `json:"summary"`
 	License         string            `json:"license"`
+	Tags            []string          `json:"tags"`
 	Stars           int               `json:"stars"`
 	PushedAt        string            `json:"pushed_at"`
 	DerivedFrom     *spec.DerivedFrom `json:"derived_from,omitempty"`

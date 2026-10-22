@@ -1,0 +1,51 @@
+{{template "top" .}}
+<section class="hero">
+  <p class="eyebrow">Recipes for software</p>
+  <h1>Fork an app spec. Let your agent build it.</h1>
+  <p class="lede">Specfork is a library of stack-free app specs: numbered, testable requirements with an acceptance check for each. Pick one, change what you need, and hand the bundle to Claude Code or any coding agent. Everything a spec builds on, like sign-in or teams, comes along automatically.</p>
+  <ol class="steps">
+    <li><strong>Pick a recipe</strong><span>Browse {{len .Cards}} specs with {{.Total}} requirements, from scheduling and CRM to a habit tracker or an archiver.</span></li>
+    <li><strong>Fork and adjust</strong><span>Every spec is a GitHub repo. Fork it, or override single requirements from your own spec.</span></li>
+    <li><strong>Build with your agent</strong><span><code>specfork resolve</code> writes one bundle; agents can also fetch it over MCP.</span></li>
+  </ol>
+  <p class="actions"><a class="btn primary" href="#specs">Browse specs</a><a class="btn" href="/docs/">Use with your agent</a><a class="btn" href="/docs/publish/">Publish a spec</a></p>
+</section>
+
+<section id="specs" aria-labelledby="specs-h">
+  <h2 id="specs-h">Specs</h2>
+  <form class="filters" role="search" action="/" method="get">
+    <label class="search"><span class="sr">Search specs</span><input id="q" name="q" type="search" placeholder="Search by name, summary, tag or area" autocomplete="off"></label>
+    <div class="chips" role="group" aria-label="Filter by tag">
+      <button type="button" class="chip" data-tag="" aria-pressed="true">All <span>{{len .Cards}}</span></button>
+      {{range .Tags}}<button type="button" class="chip" data-tag="{{.Tag}}" aria-pressed="false">{{.Tag}} <span>{{.Count}}</span></button>{{end}}
+    </div>
+  </form>
+  <ul class="cards" id="cards">
+  {{range .Cards}}
+    <li class="card" data-search="{{.Search}}" data-tags="{{join .Tags " "}}">
+      <div class="card-head">
+        <a class="name" href="{{page .Name}}">{{.Name}}</a>
+        <span class="ver">{{.Latest}}</span>
+        {{if ne .State "active"}}<span class="badge warn">{{.State}}</span>{{end}}
+      </div>
+      <p>{{.Summary}}</p>
+      <div class="meta">
+        {{range .Tags}}<span class="tag">{{.}}</span>{{end}}
+        {{if .Requirements}}<span>{{.Requirements}} requirements</span>{{end}}
+        <span>{{.License}}</span>
+        {{with .Implementations}}<span>{{len .}} implementation{{if ne (len .) 1}}s{{end}}</span>{{end}}
+      </div>
+    </li>
+  {{end}}
+  </ul>
+  <p id="none" class="muted" hidden>No spec matches. <a href="/docs/publish/">Publish one?</a></p>
+</section>
+{{with .Index.Unclaimed}}
+<section>
+  <h2>Unclaimed</h2>
+  <p class="muted">Repos tagged <code>specfork</code> whose name isn't claimed yet. They can't be resolved until claimed.</p>
+  <ul class="plain">{{range .}}<li><a href="https://github.com/{{.}}" rel="nofollow ugc noopener">{{.}}</a></li>{{end}}</ul>
+</section>
+{{end}}
+<p class="muted small">Index updated {{.Index.GeneratedAt}}.</p>
+{{template "bottom" .}}

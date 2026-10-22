@@ -1,0 +1,25 @@
+# REG-2: check claim PRs against registry/names.json and merge the valid ones.
+# pull_request_target runs this workflow from main; the PR's code is never checked out or run.
+name: claim
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths: [registry/names.json]
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Check and merge
+        run: go run ./cmd/spechub claim-check --repo "$GITHUB_REPOSITORY" --pr "$PR" --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}

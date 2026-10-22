@@ -17,7 +17,7 @@ import (
 )
 
 // DefaultURL is where the index workflow publishes (IDX-9).
-const DefaultURL = "https://specfork.github.io/specfork/index.json"
+const DefaultURL = "https://specfork.dev/index.json"
 
 // CacheTTL bounds how long a fetched index is reused (CLI-5).
 const CacheTTL = 10 * time.Minute

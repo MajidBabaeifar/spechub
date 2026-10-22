@@ -18,7 +18,7 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 | IDX-6 | `index.json`: `{generated_at, specs: [{name, repo, repo_id, owner_id, state, summary, license, stars, pushed_at, derived_from, base, head_sha, head: {requires, overrides, files}, versions: [{version, sha, requires, overrides, files}], implementations: [{repo, stack, url, version}]}], unclaimed: [repo]}`; versions sorted newest first. | TestIndexSchema |
 | IDX-7 | Implementations attach to a spec by their `implements` name; unknown names are dropped. | TestImplAttach |
 | IDX-8 | The crawler uses one token, honours `X-RateLimit-Remaining` per `X-RateLimit-Resource` (stops when `core` < 100 or `search` < 2, keeping the previous entries for unread specs), and never scrapes HTML. | TestRateLimitStop, TestRateLimitPerResource |
-| IDX-9 | The workflow publishes `index.json` and a static site to GitHub Pages at `https://specfork.github.io/specfork/`: a searchable list, and a page per spec with versions, requires, required-by, implementations, areas (linked to GitHub at the commit) and the `resolve` command. | TestSitePages; manual: open a seed page |
+| IDX-9 | The workflow publishes `index.json` and a static site to GitHub Pages at `https://specfork.dev/`: a searchable list, and a page per spec with versions, requires, required-by, implementations, areas (linked to GitHub at the commit) and the `resolve` command. | TestSitePages; manual: open a seed page |
 
 ## Out of scope
 
@@ -28,4 +28,5 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 ## Decisions
 
 - Published to Pages, not committed: no bot commits in `main`; the previous index on the site is the crawler's memory.
+- The site is served by GitHub Pages at the custom domain `specfork.dev` (DNS at Cloudflare, records in `deploy/dns/`); `specfork.github.io/specfork` redirects there.
 - GitHub Pages and Actions fit GitHub's terms while Specfork is non-commercial and the crawl publishes this project's own site (≈25 API calls/hour). Before charging for anything, move the site and crawler to paid hosting: Pages is not for running a business.

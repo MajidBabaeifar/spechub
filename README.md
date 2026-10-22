@@ -2,7 +2,7 @@
 
 **Recipes for software.** Fork an app spec, change what you need, and let your coding agent build it. Specs don't depend on a stack: one recipe, many implementations.
 
-**Browse:** https://specfork.github.io/specfork/
+**Browse:** https://specfork.dev/
 
 ## Install
 

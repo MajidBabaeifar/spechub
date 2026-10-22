@@ -53,9 +53,9 @@ var tmpl = template.Must(template.New("").Funcs(template.FuncMap{
 	},
 	"page":  pagePath,
 	"asset": assetURL,
-	"join": strings.Join,
-	"base": filepath.Base,
-	"safe": func(s string) template.HTML { return template.HTML(s) },
+	"join":  strings.Join,
+	"base":  filepath.Base,
+	"safe":  func(s string) template.HTML { return template.HTML(s) },
 	"json": func(v any) template.JS {
 		b, _ := json.Marshal(v)
 		return template.JS(b)

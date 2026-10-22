@@ -58,6 +58,11 @@
   {{with .Spec.DerivedFrom}}<section class="box"><h2>Source</h2><p class="small">Derived from <a href="{{.Repo}}" rel="nofollow noopener">{{.Repo}}</a>{{if .License}} ({{.License}}){{end}}. Behaviour described in new words; no code copied.</p></section>{{end}}
 
   <section class="box">
+    <h2>Feedback</h2>
+    <p class="small">Something wrong, unclear or missing? <a href="https://github.com/{{.Repo}}/issues/new?template=spec-problem.yml&amp;spec={{.Spec.Name}}&amp;title=Spec+problem:+{{.Spec.Name}}">Report a problem with this spec</a>.</p>
+  </section>
+
+  <section class="box">
     <h2>Versions</h2>
     <ul class="plain small">{{range .Spec.Versions}}<li>{{.Version}} · <a href="https://github.com/{{$.Spec.Repo}}/tree/{{.SHA}}"><code>{{short .SHA}}</code></a></li>{{end}}
     <li>head · <a href="https://github.com/{{.Spec.Repo}}/tree/{{.Spec.HeadSHA}}"><code>{{short .Spec.HeadSHA}}</code></a></li></ul>

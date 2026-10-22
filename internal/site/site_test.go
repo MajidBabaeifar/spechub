@@ -53,7 +53,7 @@ func must(t *testing.T, page, label string, wants ...string) {
 // WEB-1, WEB-2, WEB-11
 func TestSitePages(t *testing.T) {
 	_, read := build(t, nil)
-	for _, p := range []string{"index.html", "specfork/scheduling/index.html", "specfork/auth/index.html", "docs/index.html", "docs/publish/index.html", "docs/claim/index.html", "404.html", "index.json", "sitemap.xml", "robots.txt", "llms.txt", "og.png", "style.css", "app.js", ".nojekyll"} {
+	for _, p := range []string{"index.html", "specfork/scheduling/index.html", "specfork/auth/index.html", "docs/index.html", "docs/publish/index.html", "docs/claim/index.html", "docs/feedback/index.html", "404.html", "index.json", "sitemap.xml", "robots.txt", "llms.txt", "og.png", "style.css", "app.js", ".nojekyll"} {
 		read(p)
 	}
 	must(t, read("index.html"), "home", "Recipes for software", "Pick a recipe", "Fork and adjust", "Build with your agent", `href="/docs/"`, `href="/docs/publish/"`, `href="#specs"`)
@@ -167,4 +167,18 @@ func TestSEO(t *testing.T) {
 	must(t, read("sitemap.xml"), "sitemap", "<loc>https://specfork.dev/specfork/scheduling/</loc><lastmod>2026-10-20</lastmod>", "<loc>https://specfork.dev/docs/claim/</loc>")
 	must(t, read("robots.txt"), "robots", "Sitemap: https://specfork.dev/sitemap.xml")
 	must(t, read("llms.txt"), "llms", "# Specfork", "specfork resolve", "[@specfork/scheduling](https://specfork.dev/specfork/scheduling/)")
+}
+
+// WEB-17
+func TestFeedbackLinks(t *testing.T) {
+	_, read := build(t, nil)
+	home := read("index.html")
+	must(t, home, "home", `href="/docs/feedback/">Feedback</a>`, "issues/new?template=spec-request.yml")
+	must(t, read("specfork/scheduling/index.html"), "spec", "issues/new?template=spec-problem.yml&amp;spec=%40specfork%2fscheduling")
+	must(t, read("docs/feedback/index.html"), "feedback doc", "template=feedback.yml", "template=spec-request.yml", "template=spec-problem.yml", "/discussions", `href="/docs/publish/"`)
+	for _, f := range []string{"config.yml", "feedback.yml", "spec-request.yml", "spec-problem.yml"} {
+		if _, err := os.Stat(filepath.Join("../../.github/ISSUE_TEMPLATE", f)); err != nil {
+			t.Errorf("issue form %s: %v", f, err)
+		}
+	}
 }

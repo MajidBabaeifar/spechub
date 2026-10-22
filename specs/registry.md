@@ -10,12 +10,12 @@ SpecHub owns the names. A name points at one GitHub repo, bound by IDs, claimed 
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| REG-1 | Names live in `registry/names.json` in `MajidBabaeifar/spechub`: `{"names": {name: {repo_id, owner_id, repo, claimed_at, state}}}`; `state` is `active` or `frozen`. | test_registry_schema |
-| REG-2 | A claim is a PR that only adds entries to `names.json`. The `claim` workflow (`pull_request_target`, never runs PR code) checks each entry: the name is free and well-formed; `repo_id`/`owner_id` match the repo; the repo has topic `spechub`; its README front matter `name` equals the claimed name; the PR author is the repo owner (user repos) or has `admin` on it (org repos). All pass → squash-merged; else a comment lists the failures. | test_claim_checks |
-| REG-3 | The scope `@x` must equal the repo owner's GitHub login, lower-cased, at claim time. `@spechub` is reserved for seeds: those claims are never auto-merged. | test_claim_scope |
-| REG-4 | Names bind to numeric `repo_id` and `owner_id`, never to the `owner/repo` URL. | test_bind_ids |
-| REG-5 | The crawler looks repos up by `repo_id`; if the repo is gone or its `owner_id` differs (transfer, delete, recreate), the index marks the name `frozen`: listed, not resolvable, until a new claim PR. | test_freeze_on_id_change |
-| REG-6 | A renamed repo (same `repo_id`) is followed automatically: the index shows its current `owner/repo`. | test_rename_follows |
+| REG-1 | Names live in `registry/names.json` in `MajidBabaeifar/spechub`: `{"names": {name: {repo_id, owner_id, repo, claimed_at, state}}}`; `state` is `active` or `frozen`. | TestRegistrySchema |
+| REG-2 | A claim is a PR that only adds entries to `names.json`. The `claim` workflow (`pull_request_target`, never runs PR code) checks each entry: the name is free and well-formed; `repo_id`/`owner_id` match the repo; the repo has topic `spechub`; its README front matter `name` equals the claimed name; the PR author is the repo owner (user repos) or has `admin` on it (org repos). All pass → squash-merged; else a comment lists the failures. | TestClaimChecks |
+| REG-3 | The scope `@x` must equal the repo owner's GitHub login, lower-cased, at claim time. `@spechub` is reserved for seeds: those claims are never auto-merged. | TestClaimScope |
+| REG-4 | Names bind to numeric `repo_id` and `owner_id`, never to the `owner/repo` URL. | TestBindIDs |
+| REG-5 | The crawler looks repos up by `repo_id`; if the repo is gone or its `owner_id` differs (transfer, delete, recreate), the index marks the name `frozen`: listed, not resolvable, until a new claim PR. | TestFreezeOnIDChange |
+| REG-6 | A renamed repo (same `repo_id`) is followed automatically: the index shows its current `owner/repo`. | TestRenameFollows |
 | REG-7 | Names are never reassigned to another repo without a manual review in the PR. | manual: PR has `reassign` label and a maintainer approval |
 
 ## Out of scope

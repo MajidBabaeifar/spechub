@@ -19,8 +19,8 @@ var (
 	ErrRateLimited = errors.New("rate limit nearly spent")
 )
 
-// MinRemaining stops the crawl before the token runs dry (IDX-8).
-const MinRemaining = 100
+// MinRemaining stops the crawl before a quota runs dry, per rate-limit resource (IDX-8).
+var MinRemaining = map[string]int{"core": 100, "search": 2}
 
 // Client calls the GitHub API with one token.
 type Client struct {
@@ -29,12 +29,20 @@ type Client struct {
 	RawURL  string // default https://raw.githubusercontent.com
 	HTTP    *http.Client
 
-	Remaining int // -1 until the first response
+	Remaining map[string]int // by X-RateLimit-Resource; missing until the first response
 	Calls     int
 }
 
 func New(token string) *Client {
-	return &Client{Token: token, Remaining: -1, HTTP: &http.Client{Timeout: 30 * time.Second}}
+	return &Client{Token: token, Remaining: map[string]int{}, HTTP: &http.Client{Timeout: 30 * time.Second}}
+}
+
+// resource names the rate-limit bucket a path draws from.
+func resource(path string) string {
+	if strings.HasPrefix(path, "/search/") {
+		return "search"
+	}
+	return "core"
 }
 
 func (c *Client) base() string {
@@ -53,7 +61,8 @@ func (c *Client) raw() string {
 
 // Do sends one API request and decodes JSON into out (if non-nil).
 func (c *Client) Do(method, path string, body, out any) error {
-	if c.Remaining >= 0 && c.Remaining < MinRemaining {
+	res := resource(path)
+	if left, ok := c.Remaining[res]; ok && left < MinRemaining[res] {
 		return ErrRateLimited
 	}
 	var rd io.Reader
@@ -85,7 +94,14 @@ func (c *Client) Do(method, path string, body, out any) error {
 	c.Calls++
 	if r := resp.Header.Get("X-RateLimit-Remaining"); r != "" {
 		if n, err := strconv.Atoi(r); err == nil {
-			c.Remaining = n
+			bucket := resp.Header.Get("X-RateLimit-Resource")
+			if bucket == "" {
+				bucket = res
+			}
+			if c.Remaining == nil {
+				c.Remaining = map[string]int{}
+			}
+			c.Remaining[bucket] = n
 		}
 	}
 	data, err := io.ReadAll(io.LimitReader(resp.Body, 32<<20))

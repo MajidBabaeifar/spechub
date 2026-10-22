@@ -17,7 +17,7 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 | IDX-5 | Change detection: the previous `index.json` is fetched from the site; a spec whose head SHA and tag set are unchanged is copied from it without further reads. | TestSkipUnchanged |
 | IDX-6 | `index.json`: `{generated_at, specs: [{name, repo, repo_id, owner_id, state, summary, license, stars, pushed_at, derived_from, base, head_sha, head: {requires, overrides, files}, versions: [{version, sha, requires, overrides, files}], implementations: [{repo, stack, url, version}]}], unclaimed: [repo]}`; versions sorted newest first. | TestIndexSchema |
 | IDX-7 | Implementations attach to a spec by their `implements` name; unknown names are dropped. | TestImplAttach |
-| IDX-8 | The crawler uses one token, honours `X-RateLimit-Remaining` (stops at < 100, keeping the previous entries for unread specs), and never scrapes HTML. | TestRateLimitStop |
+| IDX-8 | The crawler uses one token, honours `X-RateLimit-Remaining` per `X-RateLimit-Resource` (stops when `core` < 100 or `search` < 2, keeping the previous entries for unread specs), and never scrapes HTML. | TestRateLimitStop, TestRateLimitPerResource |
 | IDX-9 | The workflow publishes `index.json` and a static site to GitHub Pages at `https://majidbabaeifar.github.io/spechub/`: a searchable list, and a page per spec with versions, requires, required-by, implementations, areas (linked to GitHub at the commit) and the `resolve` command. | TestSitePages; manual: open a seed page |
 
 ## Out of scope

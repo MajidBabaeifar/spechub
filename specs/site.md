@@ -10,7 +10,7 @@ https://specfork.dev: find a spec, read it, and build it with your agent. Static
 
 | ID | Requirement | Verified by |
 |---|---|---|
-| WEB-1 | Pages: `/` (home), `/<scope>/<name>/` per indexed spec (scope without `@`), `/docs/`, `/docs/publish/`, `/docs/claim/`, `/404.html`, plus `/index.json`, `/sitemap.xml`, `/robots.txt`, `/llms.txt`. | TestSitePages |
+| WEB-1 | Pages: `/` (home), `/<scope>/<name>/` per indexed spec (scope without `@`), `/docs/`, `/docs/publish/`, `/docs/claim/`, `/docs/feedback/`, `/404.html`, plus `/index.json`, `/sitemap.xml`, `/robots.txt`, `/llms.txt`. | TestSitePages |
 | WEB-2 | Home intro: "Recipes for software", one paragraph on what Specfork is, three steps (pick a recipe, fork and adjust, build with your agent) and links to the catalogue, `/docs/` and `/docs/publish/`. | TestSitePages |
 | WEB-3 | Catalogue: a card per spec with name, summary, tags, latest version, requirement count at that version, licence and implementation count; frozen specs are marked; base specs (tag `base`) listed after the others. | TestSiteCatalogue |
 | WEB-4 | Filters: a chip per tag with its spec count, and a search box matching every word against name, summary, tags and area titles; `?q=` and `?tag=` prefill both and stay in the URL. Without JavaScript every card is shown. | TestSiteCatalogue; manual: filter in a browser |
@@ -26,11 +26,13 @@ https://specfork.dev: find a spec, read it, and build it with your agent. Static
 | WEB-14 | `sitemap.xml` lists home, docs and every spec page, with `lastmod` from the spec's `pushed_at`; `robots.txt` allows all and names the sitemap. | TestSEO |
 | WEB-15 | `llms.txt`: what Specfork is, how to use it (CLI, MCP, `index.json`), and one line per spec with its page URL and summary. | TestSEO |
 | WEB-16 | No third-party scripts, fonts, trackers or cookies; usable at 360 px; light and dark themes. | manual: network tab, phone width |
+| WEB-17 | Feedback: `/docs/feedback/` and a "Feedback" link in the header and footer; GitHub issue forms on `specfork/specfork` for feedback, spec requests and spec problems, plus Discussions; every spec page links to the problem form with the spec name prefilled; an empty search links to the request form. | TestFeedbackLinks |
 
 ## Out of scope
 
 - Usage numbers on pages: shown only once the hosted layer provides real data; no empty counters.
 - Accounts, stars or comments on the site.
+- A feedback form without a GitHub account: comes with the hosted layer and its database.
 
 ## Decisions
 

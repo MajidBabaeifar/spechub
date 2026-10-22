@@ -132,7 +132,7 @@ type docPage struct {
 
 type docLink struct{ Path, Title string }
 
-var docOrder = []struct{ file, path string }{{"index.md", "/docs/"}, {"publish.md", "/docs/publish/"}, {"claim.md", "/docs/claim/"}}
+var docOrder = []struct{ file, path string }{{"index.md", "/docs/"}, {"publish.md", "/docs/publish/"}, {"claim.md", "/docs/claim/"}, {"feedback.md", "/docs/feedback/"}}
 
 // builder carries state for one build.
 type builder struct {

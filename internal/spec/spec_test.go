@@ -104,3 +104,20 @@ func TestLintVerifiedByRequired(t *testing.T) {
 		t.Fatalf("clean repo: %v %v", issues, err)
 	}
 }
+
+// FMT-2: tags.
+func TestLintTags(t *testing.T) {
+	dir := t.TempDir()
+	os.MkdirAll(filepath.Join(dir, "specs"), 0o755)
+	os.WriteFile(filepath.Join(dir, "README.md"), []byte("---\nspecfork: 1\nname: \"@a/b\"\nsummary: s\nlicense: MIT\ntags: [saas, Bad_Tag, a, b, c, d]\n---\n"), 0o644)
+	os.WriteFile(filepath.Join(dir, "specs", "a.md"), []byte("# A\n\n**Status:** Draft · **Prefix:** A\n\n| ID | Requirement | Verified by |\n|---|---|---|\n| A-1 | x | y |\n"), 0o644)
+	issues, _ := LintDir(dir)
+	var all []string
+	for _, i := range issues {
+		all = append(all, i.String())
+	}
+	got := strings.Join(all, "\n")
+	if !strings.Contains(got, "6 tags, max 5") || !strings.Contains(got, `tag "Bad_Tag"`) {
+		t.Fatalf("got:\n%s", got)
+	}
+}

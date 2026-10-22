@@ -33,6 +33,7 @@ func (i Issue) String() string {
 }
 
 var (
+	tagRe     = regexp.MustCompile(`^[a-z0-9-]{1,24}$`)
 	licenseRe = regexp.MustCompile(`^[A-Za-z0-9.+-]+( (AND|OR|WITH) [A-Za-z0-9.+-]+)*$`)
 	linkRe    = regexp.MustCompile(`\]\(([^)\s#]+)(#[^)]*)?\)`)
 	idLinkRe  = regexp.MustCompile(`\[([A-Z][A-Z0-9]*-[0-9]+)\]\(([^)\s#]+\.md)\)`)
@@ -203,6 +204,14 @@ func lintFrontMatter(fm FrontMatter, add func(rule, msg string, warn bool)) {
 		}
 		if strings.TrimSpace(v) == "" {
 			add("FMT-2", "overrides "+id+": empty value", false)
+		}
+	}
+	if len(fm.Tags) > 5 {
+		add("FMT-2", fmt.Sprintf("%d tags, max 5", len(fm.Tags)), false)
+	}
+	for _, t := range fm.Tags {
+		if !tagRe.MatchString(t) {
+			add("FMT-2", fmt.Sprintf("tag %q must be [a-z0-9-], 1-24 chars", t), false)
 		}
 	}
 	for _, k := range fm.Unknown {

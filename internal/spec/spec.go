@@ -43,6 +43,7 @@ type FrontMatter struct {
 	Base        *Base             `yaml:"base"`
 	DerivedFrom *DerivedFrom      `yaml:"derived_from"`
 	Overrides   map[string]string `yaml:"overrides"`
+	Tags        []string          `yaml:"tags"`
 	// Implementation repos (FMT-8).
 	Implements string   `yaml:"implements"`
 	Stack      []string `yaml:"stack"`
@@ -53,7 +54,7 @@ type FrontMatter struct {
 
 var knownKeys = map[string]bool{
 	"specfork": true, "name": true, "summary": true, "license": true, "requires": true,
-	"base": true, "derived_from": true, "overrides": true,
+	"base": true, "derived_from": true, "overrides": true, "tags": true,
 	"implements": true, "stack": true, "url": true,
 }
 

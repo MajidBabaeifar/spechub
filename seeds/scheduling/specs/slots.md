@@ -27,7 +27,7 @@ Which start times a booker is offered. The same rules re-check every booking ([B
 | SLT-15 | Holds: when a booker (an anonymous browser id) selects a slot, it is held for 5 minutes, replacing their earlier hold; slots overlapping another booker's unexpired hold are neither offered nor bookable (`slot_taken`); a booker's own hold is ignored; holds have no buffers. | A holds 10:00; B queries → no 10:00 |
 | SLT-16 | Seated events: a slot at time T with an existing booking stays offered until `seats_taken = seats`; other slots overlapping that booking are busy. | seats 3, 1 taken → T offered with seats_taken 1 |
 | SLT-17 | When rescheduling, the booking being moved is not busy and doesn't count towards limits. | reschedule 10:00 → 10:00 offered to that booker |
-| SLT-18 | Dates outside `[from, to]` in the booker's zone are dropped. | manual: query one day → one date key |
+| SLT-18 | Only slots starting in `[from, to)` are returned; date keys without slots are omitted. | manual: query one day → one date key |
 
 ## Out of scope
 

@@ -35,6 +35,8 @@ One agent per area, each returning testable rules with file:line citations, flag
 - Every row testable and stack-free; IDs unique; prefixes unique in the repo.
 - `spechub lint seeds/<name>` passes; every `requires` target is published.
 - A reader could build a usable product from the bundle without seeing the source.
+- Copy check (EXT-9): `python3 -I .claude/skills/extract-spec/overlap.py .sources/<repo> seeds/<name>` shows only lists of functional names.
+- The README says the seed is not affiliated with or endorsed by the source's owner (EXT-10). Skip files the source licenses commercially.
 
 ## 5. Publish
 

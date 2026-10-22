@@ -18,6 +18,8 @@ Produce seed specs from open-source apps, and prove them by rebuilding.
 | EXT-6 | Each seed is drafted in `seeds/<name>/` (gitignored) with the full spec repo layout, then pushed to its own repo `MajidBabaeifar/spechub-<name>` (topic `spechub`), tagged `v0.1.0`, and claimed in the registry; from then on that repo is the source of truth. | manual: seed repo has topic and tag |
 | EXT-7 | Proof: an agent builds the resolved bundle in a stack different from the source's; failures are fixed in the spec, not the build. The rebuild is published as an implementation repo. | manual: rebuild passes its checks |
 | EXT-8 | The pipeline is the Claude Code skill `/extract-spec <repo-url>`. | manual: run on Cal.com |
+| EXT-9 | Before publishing, a copy check finds no 10-word run shared between the seed and the source's text, except lists of functional names (event, field or enum names). Files the source licenses commercially are never described. | manual: `python3 -I .claude/skills/extract-spec/overlap.py .sources/<repo> seeds/<name>` |
+| EXT-10 | A seed's README names its source truthfully and says it is not affiliated with or endorsed by the source's owner; seed names stay generic. | manual: seed README |
 
 ## Out of scope
 

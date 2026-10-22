@@ -28,3 +28,4 @@ Find spec and implementation repos on GitHub and publish one `index.json` plus a
 ## Decisions
 
 - Published to Pages, not committed: no bot commits in `main`; the previous index on the site is the crawler's memory.
+- GitHub Pages and Actions fit GitHub's terms while SpecHub is non-commercial and the crawl publishes this project's own site (≈25 API calls/hour). Before charging for anything, move the site and crawler to paid hosting: Pages is not for running a business.

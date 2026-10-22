@@ -58,6 +58,33 @@ func TestRateLimitStop(t *testing.T) {
 	}
 }
 
+// IDX-8: the small search quota doesn't stop core calls, and vice versa.
+func TestRateLimitPerResource(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/search/") {
+			w.Header().Set("X-RateLimit-Resource", "search")
+			w.Header().Set("X-RateLimit-Remaining", "1")
+			fmt.Fprint(w, `{"total_count": 0, "items": []}`)
+			return
+		}
+		w.Header().Set("X-RateLimit-Resource", "core")
+		w.Header().Set("X-RateLimit-Remaining", "4999")
+		fmt.Fprint(w, `{"id": 1}`)
+	}))
+	defer srv.Close()
+	c := New("t")
+	c.BaseURL = srv.URL
+	if _, err := c.SearchRepos("topic:spechub"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.RepoByID(1); err != nil {
+		t.Fatalf("core call blocked by the search quota: %v", err)
+	}
+	if _, err := c.SearchRepos("topic:spechub"); !errors.Is(err, ErrRateLimited) {
+		t.Fatalf("search quota not honoured: %v", err)
+	}
+}
+
 func TestNotFound(t *testing.T) {
 	srv := httptest.NewServer(http.NotFoundHandler())
 	defer srv.Close()

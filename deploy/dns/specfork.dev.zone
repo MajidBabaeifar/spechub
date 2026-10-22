@@ -1,0 +1,17 @@
+; DNS for specfork.dev (BIND zone format, for Cloudflare: DNS > Records > Import and Export).
+; The site is served by GitHub Pages; keep these records "DNS only" (do not tick "Proxy imported records").
+$ORIGIN specfork.dev.
+$TTL 300
+
+; GitHub Pages, apex
+@	IN	A	185.199.108.153
+@	IN	A	185.199.109.153
+@	IN	A	185.199.110.153
+@	IN	A	185.199.111.153
+@	IN	AAAA	2606:50c0:8000::153
+@	IN	AAAA	2606:50c0:8001::153
+@	IN	AAAA	2606:50c0:8002::153
+@	IN	AAAA	2606:50c0:8003::153
+
+; www redirects to the apex via GitHub Pages
+www	IN	CNAME	specfork.github.io.

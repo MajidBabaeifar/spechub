@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MajidBabaeifar/spechub/internal/ghapi"
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/registry"
+	"github.com/specfork/specfork/internal/ghapi"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/registry"
 )
 
 type fake struct {
@@ -88,9 +88,9 @@ func (f *fake) Raw(full, sha, p string) ([]byte, error) {
 // addSpec adds a spec repo with a head commit and optional tags (all with the same front matter).
 func (f *fake) addSpec(id, owner int64, full, name, requires string, tags ...string) {
 	login, _, _ := strings.Cut(full, "/")
-	f.repos[id] = ghapi.Repo{ID: id, FullName: full, Owner: ghapi.Owner{ID: owner, Login: login, Type: "User"}, Topics: []string{"spechub"}, DefaultBranch: "main", Stars: int(id)}
+	f.repos[id] = ghapi.Repo{ID: id, FullName: full, Owner: ghapi.Owner{ID: owner, Login: login, Type: "User"}, Topics: []string{"specfork"}, DefaultBranch: "main", Stars: int(id)}
 	f.search[SpecQuery] = append(f.search[SpecQuery], id)
-	readme := fmt.Sprintf("---\nspechub: 1\nname: %q\nsummary: s %s\nlicense: CC-BY-4.0\n%s---\n", name, name, requires)
+	readme := fmt.Sprintf("---\nspecfork: 1\nname: %q\nsummary: s %s\nlicense: CC-BY-4.0\n%s---\n", name, name, requires)
 	shas := append([]string{"head-" + full}, tags...)
 	f.heads[full] = "head-" + full
 	for _, sha := range shas {
@@ -267,5 +267,16 @@ func TestRenameFollows(t *testing.T) {
 	ix, _ := Run(f, names(map[string]registry.Entry{"@ann/a": active(1, 100, "ann/a")}), nil, now)
 	if ix.Specs[0].Repo != "ann/renamed" || ix.Specs[0].State != "active" {
 		t.Fatalf("%+v", ix.Specs[0])
+	}
+}
+
+// IDX-3: tags from before a rename are ignored.
+func TestOldNameTagsIgnored(t *testing.T) {
+	f := newFake()
+	f.addSpec(1, 100, "ann/a", "@ann/a", "", "v0.1.0", "v0.2.0")
+	f.files["ann/a@v0.1.0-sha/README.md"] = "---\nspechub: 1\nname: \"@old/a\"\n---\n"
+	ix, _ := Run(f, names(map[string]registry.Entry{"@ann/a": active(1, 100, "ann/a")}), nil, now)
+	if v := ix.Specs[0].Versions; len(v) != 1 || v[0].Version != "0.2.0" {
+		t.Fatalf("versions %+v", v)
 	}
 }

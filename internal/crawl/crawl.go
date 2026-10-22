@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MajidBabaeifar/spechub/internal/ghapi"
-	"github.com/MajidBabaeifar/spechub/internal/index"
-	"github.com/MajidBabaeifar/spechub/internal/registry"
-	"github.com/MajidBabaeifar/spechub/internal/semver"
-	"github.com/MajidBabaeifar/spechub/internal/spec"
+	"github.com/specfork/specfork/internal/ghapi"
+	"github.com/specfork/specfork/internal/index"
+	"github.com/specfork/specfork/internal/registry"
+	"github.com/specfork/specfork/internal/semver"
+	"github.com/specfork/specfork/internal/spec"
 )
 
 // GitHub is what the crawler reads.
@@ -26,8 +26,8 @@ type GitHub interface {
 }
 
 const (
-	SpecQuery = "topic:spechub fork:true"
-	ImplQuery = "topic:spechub-impl fork:true"
+	SpecQuery = "topic:specfork fork:true"
+	ImplQuery = "topic:specfork-impl fork:true"
 )
 
 // Stats reports what a crawl did.
@@ -189,7 +189,7 @@ func (c *crawler) spec(r ghapi.Repo) (index.Spec, bool, bool) {
 		}
 		return index.Spec{}, false, false
 	}
-	if fm.Spechub != 1 || fm.Name == "" {
+	if fm.Specfork != 1 || fm.Name == "" {
 		return index.Spec{}, false, false
 	}
 	c.stats.Read++
@@ -200,10 +200,13 @@ func (c *crawler) spec(r ghapi.Repo) (index.Spec, bool, bool) {
 		Versions: []index.Version{}, Implementations: []index.Impl{},
 	}
 	for _, t := range releases {
-		_, vs, err := c.snapshot(r.FullName, t.SHA)
+		vfm, vs, err := c.snapshot(r.FullName, t.SHA)
 		if err != nil {
 			c.note(r.FullName+"@"+t.Name, err)
 			continue
+		}
+		if vfm.Specfork != 1 || vfm.Name != fm.Name {
+			continue // a tag from before a rename, or not a spec (IDX-3)
 		}
 		v, _ := semver.Parse(t.Name)
 		s.Versions = append(s.Versions, index.Version{Version: v.String(), SHA: t.SHA, Snapshot: vs})

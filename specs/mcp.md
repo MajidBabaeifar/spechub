@@ -1,6 +1,6 @@
 # MCP
 
-**Status:** Draft · **Prefix:** MCP
+**Status:** Live · **Prefix:** MCP
 
 ## Purpose
 

@@ -1,6 +1,6 @@
 # Compose
 
-**Status:** Draft · **Prefix:** CMP
+**Status:** Live · **Prefix:** CMP
 
 ## Purpose
 

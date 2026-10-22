@@ -1,37 +1,135 @@
 {
   "names": {
-    "@spechub/auth": {
+    "@specfork/archiver": {
       "claimed_at": "2026-10-22",
-      "owner_id": 88742101,
-      "repo": "MajidBabaeifar/spechub-auth",
+      "owner_id": 346204958,
+      "repo": "Specfork/archiver",
+      "repo_id": 1429302417,
+      "state": "active"
+    },
+    "@specfork/auth": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/auth",
       "repo_id": 1429077818,
       "state": "active"
     },
-    "@spechub/crm": {
+    "@specfork/budget": {
       "claimed_at": "2026-10-22",
-      "owner_id": 88742101,
-      "repo": "MajidBabaeifar/spechub-crm",
+      "owner_id": 346204958,
+      "repo": "Specfork/budget",
+      "repo_id": 1429302500,
+      "state": "active"
+    },
+    "@specfork/clipboard-manager": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/clipboard-manager",
+      "repo_id": 1429302589,
+      "state": "active"
+    },
+    "@specfork/crm": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/crm",
       "repo_id": 1429107462,
       "state": "active"
     },
-    "@spechub/scheduling": {
+    "@specfork/disk-usage": {
       "claimed_at": "2026-10-22",
-      "owner_id": 88742101,
-      "repo": "MajidBabaeifar/spechub-scheduling",
+      "owner_id": 346204958,
+      "repo": "Specfork/disk-usage",
+      "repo_id": 1429302694,
+      "state": "active"
+    },
+    "@specfork/fitness-log": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/fitness-log",
+      "repo_id": 1429302781,
+      "state": "active"
+    },
+    "@specfork/habits": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/habits",
+      "repo_id": 1429302898,
+      "state": "active"
+    },
+    "@specfork/notifications": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/notifications",
+      "repo_id": 1429303015,
+      "state": "active"
+    },
+    "@specfork/password-manager": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/password-manager",
+      "repo_id": 1429303114,
+      "state": "active"
+    },
+    "@specfork/privacy": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/privacy",
+      "repo_id": 1429303233,
+      "state": "active"
+    },
+    "@specfork/projects": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/projects",
+      "repo_id": 1429303351,
+      "state": "active"
+    },
+    "@specfork/scheduling": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/scheduling",
       "repo_id": 1429078149,
       "state": "active"
     },
-    "@spechub/teams": {
+    "@specfork/screenshot": {
       "claimed_at": "2026-10-22",
-      "owner_id": 88742101,
-      "repo": "MajidBabaeifar/spechub-teams",
+      "owner_id": 346204958,
+      "repo": "Specfork/screenshot",
+      "repo_id": 1429303468,
+      "state": "active"
+    },
+    "@specfork/support-inbox": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/support-inbox",
+      "repo_id": 1429303570,
+      "state": "active"
+    },
+    "@specfork/teams": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/teams",
       "repo_id": 1429077938,
       "state": "active"
     },
-    "@spechub/webhooks": {
+    "@specfork/text-editor": {
       "claimed_at": "2026-10-22",
-      "owner_id": 88742101,
-      "repo": "MajidBabaeifar/spechub-webhooks",
+      "owner_id": 346204958,
+      "repo": "Specfork/text-editor",
+      "repo_id": 1429303672,
+      "state": "active"
+    },
+    "@specfork/todo": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/todo",
+      "repo_id": 1429303807,
+      "state": "active"
+    },
+    "@specfork/webhooks": {
+      "claimed_at": "2026-10-22",
+      "owner_id": 346204958,
+      "repo": "Specfork/webhooks",
       "repo_id": 1429078037,
       "state": "active"
     }
